@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Senarai Semak Tugas Harian - Pembantu Makmal</title>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <style>
+    :root{
+      --border:#000;
+      --text:#111;
+      --muted:#444;
+      --bg:#fff;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:#eef1f5;
+      color:var(--text);
+      font-family:"Arial","Helvetica",sans-serif;
+      -webkit-print-color-adjust:exact;
+      print-color-adjust:exact;
+    }
+    .toolbar{
+      position:sticky;
+      top:0;
+      z-index:20;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      justify-content:center;
+      padding:12px;
+      background:#111827;
+      color:#fff;
+      box-shadow:0 4px 18px rgba(0,0,0,.15);
+    }
+    .toolbar button{
+      border:0;
+      padding:10px 14px;
+      border-radius:10px;
+      font-weight:700;
+      cursor:pointer;
+    }
+    .toolbar .primary{background:#fff;color:#111}
+    .toolbar .ghost{background:#374151;color:#fff}
+    .toolbar .danger{background:#b91c1c;color:#fff}
+    .toolbar .hint{
+      font-size:13px;
+      opacity:.9;
+    }
+    .page-wrap{
+      padding:24px;
+      display:flex;
+      justify-content:center;
+    }
+    .sheet{
+      width:210mm;
+      min-height:297mm;
+      background:var(--bg);
+      box-shadow:0 10px 28px rgba(0,0,0,.14);
+      padding:10mm 10mm 12mm;
+    }
+    .school{
+      text-align:center;
+      line-height:1.25;
+      font-size:14px;
+      margin-bottom:6px;
+    }
+    .title{
+      text-align:center;
+      font-weight:700;
+      font-size:20px;
+      letter-spacing:.3px;
+      margin:6px 0 14px;
+      text-transform:uppercase;
+    }
+    .meta{
+      width:100%;
+      border-collapse:collapse;
+      margin-bottom:8px;
+      font-size:14px;
+    }
+    .meta td{
+      padding:2px 4px;
+      vertical-align:top;
+    }
+    .meta .label{
+      width:155px;
+      font-weight:700;
+      white-space:nowrap;
+    }
+    .line-fill{
+      display:inline-block;
+      min-width:260px;
+      border-bottom:1px solid #000;
+      padding:0 4px 2px;
+      font-weight:700;
+    }
+    .months{
+      width:100%;
+      border-collapse:collapse;
+      margin:6px 0 10px;
+      table-layout:fixed;
+      font-size:12px;
+    }
+    .months td{
+      border:1px solid var(--border);
+      padding:5px 3px;
+      text-align:center;
+      font-weight:700;
+    }
+    .months .active{
+      background:#e8eefc;
+    }
+    .checklist{
+      width:100%;
+      border-collapse:collapse;
+      table-layout:fixed;
+      font-size:12px;
+    }
+    .checklist th,
+    .checklist td{
+      border:1px solid var(--border);
+      padding:4px;
+      vertical-align:top;
+    }
+    .checklist th{
+      text-align:center;
+      font-weight:700;
+    }
+    .c-bil{width:8%}
+    .c-masa{width:12%}
+    .c-tugas{width:40%}
+    .c-day{width:5.7%}
+    .c-note{width:17%}
+    .masa-box{
+      text-align:center;
+      font-weight:700;
+      line-height:1.3;
+      height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:360px;
+    }
+    .task-list{
+      margin:0;
+      padding-left:18px;
+      line-height:1.4;
+    }
+    .task-list li{margin:0 0 2px}
+    .day-cell{
+      text-align:center;
+      vertical-align:middle !important;
+      padding:0 !important;
+    }
+    .tick{
+      appearance:none;
+      -webkit-appearance:none;
+      width:100%;
+      height:30px;
+      margin:0;
+      display:block;
+      cursor:pointer;
+      position:relative;
+      background:#fff;
+    }
+    .tick:checked::after{
+      content:"✓";
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:22px;
+      font-weight:700;
+    }
+    textarea, input[type="text"]{
+      width:100%;
+      border:0;
+      outline:0;
+      resize:none;
+      font:inherit;
+      background:transparent;
+      color:inherit;
+    }
+    .notes-main{
+      min-height:360px;
+      line-height:1.35;
+    }
+    .dates-head{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:0;
+      margin:2px 0 6px;
+      font-size:11px;
+      font-weight:700;
+    }
+    .dates-head div{
+      text-align:center;
+      padding:3px 2px;
+      border:1px solid #000;
+      border-bottom:0;
+    }
+    .extra{
+      margin-top:10px;
+      width:100%;
+      border-collapse:collapse;
+      table-layout:fixed;
+      font-size:12px;
+    }
+    .extra th,.extra td{
+      border:1px solid #000;
+      padding:5px;
+      height:30px;
+    }
+    .extra .e-bil{width:8%}
+    .extra .e-tarikh{width:25%}
+    .extra .e-tugas{width:auto}
+    .footer{
+      display:flex;
+      justify-content:space-between;
+      gap:24px;
+      margin-top:22px;
+      font-size:13px;
+    }
+    .sign{
+      width:46%;
+    }
+    .sign .label{
+      font-weight:700;
+      margin-bottom:28px;
+    }
+    .sign .line{
+      border-top:1px solid #000;
+      padding-top:5px;
+      min-height:18px;
+    }
+    .tiny{
+      font-size:11px;
+      color:var(--muted);
+      margin-top:8px;
+    }
+    .toast{
+      position:fixed;
+      right:16px;
+      bottom:16px;
+      background:#111827;
+      color:#fff;
+      padding:10px 14px;
+      border-radius:10px;
+      box-shadow:0 8px 24px rgba(0,0,0,.2);
+      opacity:0;
+      transform:translateY(10px);
+      pointer-events:none;
+      transition:.25s ease;
+      z-index:30;
+      font-size:14px;
+    }
+    .toast.show{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    @media (max-width: 900px){
+      .page-wrap{padding:12px}
+      .sheet{
+        width:100%;
+        min-height:auto;
+        padding:16px;
+      }
+      .toolbar{justify-content:flex-start}
+    }
+    @media print{
+      body{background:#fff}
+      .toolbar,.toast{display:none !important}
+      .page-wrap{padding:0}
+      .sheet{
+        width:210mm;
+        min-height:297mm;
+        box-shadow:none;
+        margin:0;
+        padding:8mm 8mm 10mm;
+      }
+      @page{
+        size:A4 portrait;
+        margin:0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <button class="primary" onclick="window.print()">Print / Save PDF</button>
+    <button class="ghost" onclick="saveAsPNG()">Save PNG</button>
+    <button class="ghost" onclick="saveAsJPG()">Save JPG</button>
+    <button class="ghost" onclick="markAll()">Tanda Semua Hari</button>
+    <button class="ghost" onclick="clearChecks()">Reset Tanda</button>
+    <button class="danger" onclick="resetAll()">Padam Semua Data</button>
+    <div class="hint">Export pro: PDF + PNG + JPG • Nama fail auto ikut minggu</div>
+  </div>
+
+  <div class="page-wrap">
+    <div class="sheet" id="sheet">
+      <div class="school">
+        <div><strong>Sekolah Menengah Kebangsaan Mentakab</strong></div>
+        <div>Jalan Pekeliling, 28400 Mentakab</div>
+        <div>Pahang Darul Makmur</div>
+      </div>
+
+      <div class="title">Senarai Semak Tugas Harian Tahun <span id="tahun">2026</span></div>
+
+      <table class="meta">
+        <tr>
+          <td class="label">NAMA</td>
+          <td>: <span class="line-fill" contenteditable="true" id="nama">PEMBANTU MAKMAL</span></td>
+        </tr>
+        <tr>
+          <td class="label">JAWATAN</td>
+          <td>: <span class="line-fill">PEMBANTU MAKMAL</span></td>
+        </tr>
+        <tr>
+          <td class="label">WAKTU BERTUGAS</td>
+          <td>: <span class="line-fill" contenteditable="true" id="waktu">7:30 pagi – 4:30 petang ( Hari Persekolahan )</span></td>
+        </tr>
+      </table>
+
+      <table class="months" id="monthsRow">
+        <tr>
+          <td data-month="0">JANUARI</td>
+          <td data-month="1">FEBRUARI</td>
+          <td data-month="2">MAC</td>
+          <td data-month="3">APRIL</td>
+          <td data-month="4">MEI</td>
+          <td data-month="5">JUN</td>
+        </tr>
+        <tr>
+          <td data-month="6">JULAI</td>
+          <td data-month="7">OGOS</td>
+          <td data-month="8">SEPTEMBER</td>
+          <td data-month="9">OKTOBER</td>
+          <td data-month="10">NOVEMBER</td>
+          <td data-month="11">DISEMBER</td>
+        </tr>
+      </table>
+
+      <div class="dates-head" id="weekDates"></div>
+
+      <table class="checklist">
+        <colgroup>
+          <col class="c-bil">
+          <col class="c-masa">
+          <col class="c-tugas">
+          <col class="c-day">
+          <col class="c-day">
+          <col class="c-day">
+          <col class="c-day">
+          <col class="c-day">
+          <col class="c-note">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>BIL</th>
+            <th>MASA</th>
+            <th>TUGAS MINGGUAN</th>
+            <th>I</th>
+            <th>S</th>
+            <th>R</th>
+            <th>K</th>
+            <th>J</th>
+            <th>CATATAN</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align:center;font-weight:700;">1.</td>
+            <td>
+              <div class="masa-box">7:30 pagi<br>–<br>4:30 petang</div>
+            </td>
+            <td>
+              <ol class="task-list">
+                <li>Membuka pintu &amp; tingkap makmal</li>
+                <li>Memastikan pengudaraan dan makmal dalam keadaan baik</li>
+                <li>Memastikan makmal sentiasa bersih</li>
+                <li>Menyemak borang pesanan guru untuk amali / eksperimen</li>
+                <li>Menyediakan alat radas &amp; bahan kimia untuk amali</li>
+                <li>Menyediakan larutan sekiranya diperlukan</li>
+                <li>Memastikan alat radas berfungsi dan lengkap</li>
+                <li>Mengawas &amp; membantu pelajar ketika amali sedang dijalankan</li>
+                <li>Membantu mengendalikan alat bantuan mengajar (ABM)</li>
+                <li>Memastikan alat radas &amp; bahan mencukupi selepas amali / eksperimen dijalankan</li>
+                <li>Membersihkan peralatan amali</li>
+                <li>Menyimpan alat radas &amp; bahan kimia yang digunakan</li>
+                <li>Menyemak dan mengemaskini fail makmal</li>
+                <li>Menyemak stok alat radas dan bahan dari masa ke semasa</li>
+                <li>Memeriksa &amp; menyelenggara kemudahan makmal</li>
+                <li>Mengunci pintu &amp; menutup tingkap sebelum balik</li>
+              </ol>
+            </td>
+            <td class="day-cell"><input class="tick persist" data-key="i" type="checkbox"></td>
+            <td class="day-cell"><input class="tick persist" data-key="s" type="checkbox"></td>
+            <td class="day-cell"><input class="tick persist" data-key="r" type="checkbox"></td>
+            <td class="day-cell"><input class="tick persist" data-key="k" type="checkbox"></td>
+            <td class="day-cell"><input class="tick persist" data-key="j" type="checkbox"></td>
+            <td><textarea class="persist notes-main" data-key="catatan" placeholder="Taip catatan di sini..."></textarea></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="extra">
+        <thead>
+          <tr>
+            <th class="e-bil">BIL</th>
+            <th class="e-tarikh">TARIKH</th>
+            <th class="e-tugas">TUGAS TAMBAHAN</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align:center;font-weight:700;">1.</td>
+            <td><input type="text" class="persist" data-key="t1_tarikh" placeholder="Contoh: 25/03/2026"></td>
+            <td><input type="text" class="persist" data-key="t1_tugas" placeholder="Taip tugas tambahan"></td>
+          </tr>
+          <tr>
+            <td style="text-align:center;font-weight:700;">2.</td>
+            <td><input type="text" class="persist" data-key="t2_tarikh"></td>
+            <td><input type="text" class="persist" data-key="t2_tugas"></td>
+          </tr>
+          <tr>
+            <td style="text-align:center;font-weight:700;">3.</td>
+            <td><input type="text" class="persist" data-key="t3_tarikh"></td>
+            <td><input type="text" class="persist" data-key="t3_tugas"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="footer">
+        <div class="sign">
+          <div class="label">DISEDIAKAN :</div>
+          <div class="line" id="namaFooter">PEMBANTU MAKMAL</div>
+        </div>
+        <div class="sign">
+          <div class="label">&nbsp;</div>
+          <div class="tiny">Borang ini adalah versi digital berasaskan format asal.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Fail berjaya disimpan</div>
+
+  <script>
+    const now = new Date();
+    const yearEl = document.getElementById('tahun');
+    yearEl.textContent = now.getFullYear();
+
+    document.querySelectorAll('[data-month]').forEach(td=>{
+      if (Number(td.dataset.month) === now.getMonth()) td.classList.add('active');
+    });
+
+    function getMonday(date){
+      const d = new Date(date);
+      const day = d.getDay();
+      const diff = day === 0 ? -6 : 1 - day;
+      d.setDate(d.getDate() + diff);
+      d.setHours(0,0,0,0);
+      return d;
+    }
+
+    function fmtDate(d){
+      return d.toLocaleDateString('ms-MY', { day:'2-digit', month:'2-digit', year:'numeric' });
+    }
+
+    function renderWeekDates(){
+      const days = ['ISNIN','SELASA','RABU','KHAMIS','JUMAAT'];
+      const monday = getMonday(now);
+      const box = document.getElementById('weekDates');
+      box.innerHTML = '';
+      for(let i=0;i<5;i++){
+        const d = new Date(monday);
+        d.setDate(monday.getDate()+i);
+        const el = document.createElement('div');
+        el.innerHTML = `<div>${days[i]}</div><div>${fmtDate(d)}</div>`;
+        box.appendChild(el);
+      }
+    }
+    renderWeekDates();
+
+    const nama = document.getElementById('nama');
+    const waktu = document.getElementById('waktu');
+    const namaFooter = document.getElementById('namaFooter');
+    const toast = document.getElementById('toast');
+
+    function showToast(msg){
+      toast.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(()=>toast.classList.remove('show'), 2200);
+    }
+
+    function storageKey(){
+      const monday = getMonday(now);
+      return 'smkm_checklist_pembantu_makmal_' + fmtDate(monday).replaceAll('/','-');
+    }
+
+    function syncFooter(){
+      const text = (nama.textContent || '').trim() || 'PEMBANTU MAKMAL';
+      namaFooter.textContent = text;
+    }
+
+    function saveData(){
+      const data = {
+        nama: nama.textContent.trim(),
+        waktu: waktu.textContent.trim()
+      };
+      document.querySelectorAll('.persist').forEach(el=>{
+        const key = el.dataset.key;
+        if(!key) return;
+        data[key] = el.type === 'checkbox' ? el.checked : el.value;
+      });
+      localStorage.setItem(storageKey(), JSON.stringify(data));
+      syncFooter();
+    }
+
+    function loadData(){
+      const raw = localStorage.getItem(storageKey());
+      if(!raw){ syncFooter(); return; }
+      try{
+        const data = JSON.parse(raw);
+        if(data.nama) nama.textContent = data.nama;
+        if(data.waktu) waktu.textContent = data.waktu;
+        document.querySelectorAll('.persist').forEach(el=>{
+          const key = el.dataset.key;
+          if(!(key in data)) return;
+          if(el.type === 'checkbox') el.checked = !!data[key];
+          else el.value = data[key] || '';
+        });
+      }catch(e){}
+      syncFooter();
+    }
+
+    function markAll(){
+      document.querySelectorAll('.tick').forEach(c=>c.checked = true);
+      saveData();
+    }
+
+    function clearChecks(){
+      document.querySelectorAll('.tick').forEach(c=>c.checked = false);
+      saveData();
+    }
+
+    function resetAll(){
+      if(!confirm('Padam semua data minggu ini?')) return;
+      localStorage.removeItem(storageKey());
+      document.querySelectorAll('.tick').forEach(c=>c.checked = false);
+      document.querySelectorAll('textarea.persist, input.persist').forEach(el=>el.value='');
+      nama.textContent = 'PEMBANTU MAKMAL';
+      waktu.textContent = '7:30 pagi – 4:30 petang ( Hari Persekolahan )';
+      syncFooter();
+      showToast('Semua data minggu ini dipadam');
+    }
+
+    function sanitizeFilePart(text){
+      return (text || 'PEMBANTU_MAKMAL')
+        .trim()
+        .replace(/\s+/g,'_')
+        .replace(/[^\w\-]/g,'')
+        .replace(/_+/g,'_')
+        .replace(/^_+|_+$/g,'') || 'PEMBANTU_MAKMAL';
+    }
+
+    function getFileBaseName(){
+      const monday = getMonday(now);
+      const friday = new Date(monday);
+      friday.setDate(monday.getDate() + 4);
+      const namaPart = sanitizeFilePart(nama.textContent || 'PEMBANTU_MAKMAL');
+      const weekPart = `minggu_${fmtDate(monday).replaceAll('/','-')}_hingga_${fmtDate(friday).replaceAll('/','-')}`;
+      return `Checklist_${namaPart}_${weekPart}`;
+    }
+
+    async function renderSheetCanvas(bgColor){
+      const sheet = document.getElementById('sheet');
+      return await html2canvas(sheet, {
+        scale: Math.max(2, window.devicePixelRatio || 1),
+        useCORS: true,
+        backgroundColor: bgColor,
+        scrollX: 0,
+        scrollY: -window.scrollY
+      });
+    }
+
+    async function saveAsPNG(){
+      const canvas = await renderSheetCanvas('#ffffff');
+      const link = document.createElement('a');
+      link.download = getFileBaseName() + '.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      showToast('PNG berjaya disimpan');
+    }
+
+    async function saveAsJPG(){
+      const canvas = await renderSheetCanvas('#ffffff');
+      const link = document.createElement('a');
+      link.download = getFileBaseName() + '.jpg';
+      link.href = canvas.toDataURL('image/jpeg', 0.95);
+      link.click();
+      showToast('JPG berjaya disimpan');
+    }
+
+    window.markAll = markAll;
+    window.clearChecks = clearChecks;
+    window.resetAll = resetAll;
+    window.saveAsPNG = saveAsPNG;
+    window.saveAsJPG = saveAsJPG;
+
+    document.querySelectorAll('.persist').forEach(el=>{
+      el.addEventListener('input', saveData);
+      el.addEventListener('change', saveData);
+    });
+    nama.addEventListener('input', saveData);
+    waktu.addEventListener('input', saveData);
+
+    loadData();
+  </script>
+</body>
+</html>
