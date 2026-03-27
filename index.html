@@ -13,44 +13,62 @@
       --bg:#fff;
     }
     *{box-sizing:border-box}
+    html,body{
+      max-width:100%;
+      overflow-x:hidden;
+    }
     body{
       margin:0;
-      background:#eef1f5;
+      background:linear-gradient(180deg,#eef2f7 0%, #e6ebf3 100%);
       color:var(--text);
       font-family:"Arial","Helvetica",sans-serif;
       -webkit-print-color-adjust:exact;
       print-color-adjust:exact;
     }
+
     .toolbar{
       position:sticky;
       top:0;
-      z-index:20;
+      z-index:50;
       display:flex;
       flex-wrap:wrap;
-      gap:10px;
+      gap:8px;
       align-items:center;
       justify-content:center;
-      padding:12px;
-      background:#111827;
+      padding:10px;
+      background:rgba(17,24,39,.95);
       color:#fff;
       box-shadow:0 4px 18px rgba(0,0,0,.15);
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
     }
     .toolbar button{
       border:0;
+      min-height:44px;
       padding:10px 14px;
-      border-radius:10px;
+      border-radius:12px;
       font-weight:700;
+      font-size:13px;
       cursor:pointer;
+      transition:.18s ease;
+      box-shadow:0 3px 10px rgba(0,0,0,.12);
+    }
+    .toolbar button:active{
+      transform:scale(.98);
     }
     .toolbar .primary{background:#fff;color:#111}
     .toolbar .ghost{background:#374151;color:#fff}
     .toolbar .danger{background:#b91c1c;color:#fff}
     .toolbar .hint{
-      font-size:13px;
+      width:100%;
+      text-align:center;
+      font-size:11px;
       opacity:.9;
+      margin-top:2px;
     }
+
     .page-wrap{
-      padding:24px;
+      padding:14px;
       display:flex;
       justify-content:center;
     }
@@ -58,23 +76,27 @@
       width:210mm;
       min-height:297mm;
       background:var(--bg);
-      box-shadow:0 10px 28px rgba(0,0,0,.14);
+      box-shadow:0 14px 34px rgba(0,0,0,.14);
+      border-radius:18px;
+      overflow:hidden;
       padding:10mm 10mm 12mm;
     }
+
     .school{
       text-align:center;
-      line-height:1.25;
+      line-height:1.35;
       font-size:14px;
-      margin-bottom:6px;
+      margin-bottom:8px;
     }
     .title{
       text-align:center;
-      font-weight:700;
+      font-weight:800;
       font-size:20px;
       letter-spacing:.3px;
-      margin:6px 0 14px;
+      margin:8px 0 14px;
       text-transform:uppercase;
     }
+
     .meta{
       width:100%;
       border-collapse:collapse;
@@ -82,7 +104,7 @@
       font-size:14px;
     }
     .meta td{
-      padding:2px 4px;
+      padding:4px 4px;
       vertical-align:top;
     }
     .meta .label{
@@ -90,105 +112,48 @@
       font-weight:700;
       white-space:nowrap;
     }
+
     .line-fill{
       display:inline-block;
       min-width:260px;
       border-bottom:1px solid #000;
       padding:0 4px 2px;
       font-weight:700;
+      background:transparent;
     }
+
+    #namaSelect{
+      width:100%;
+      min-width:260px;
+      border:0;
+      outline:0;
+      background:transparent;
+      font:inherit;
+      font-weight:700;
+      color:inherit;
+      appearance:none;
+      -webkit-appearance:none;
+      cursor:pointer;
+      padding:0;
+    }
+
     .months{
       width:100%;
       border-collapse:collapse;
-      margin:6px 0 10px;
+      margin:8px 0 10px;
       table-layout:fixed;
       font-size:12px;
     }
     .months td{
       border:1px solid var(--border);
-      padding:5px 3px;
+      padding:6px 4px;
       text-align:center;
       font-weight:700;
     }
     .months .active{
-      background:#e8eefc;
+      background:#dfe9ff;
     }
-    .checklist{
-      width:100%;
-      border-collapse:collapse;
-      table-layout:fixed;
-      font-size:12px;
-    }
-    .checklist th,
-    .checklist td{
-      border:1px solid var(--border);
-      padding:4px;
-      vertical-align:top;
-    }
-    .checklist th{
-      text-align:center;
-      font-weight:700;
-    }
-    .c-bil{width:8%}
-    .c-masa{width:12%}
-    .c-tugas{width:40%}
-    .c-day{width:5.7%}
-    .c-note{width:17%}
-    .masa-box{
-      text-align:center;
-      font-weight:700;
-      line-height:1.3;
-      height:100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      min-height:360px;
-    }
-    .task-list{
-      margin:0;
-      padding-left:18px;
-      line-height:1.4;
-    }
-    .task-list li{margin:0 0 2px}
-    .day-cell{
-      text-align:center;
-      vertical-align:middle !important;
-      padding:0 !important;
-    }
-    .tick{
-      appearance:none;
-      -webkit-appearance:none;
-      width:100%;
-      height:30px;
-      margin:0;
-      display:block;
-      cursor:pointer;
-      position:relative;
-      background:#fff;
-    }
-    .tick:checked::after{
-      content:"✓";
-      position:absolute;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:22px;
-      font-weight:700;
-    }
-    textarea, input[type="text"]{
-      width:100%;
-      border:0;
-      outline:0;
-      resize:none;
-      font:inherit;
-      background:transparent;
-      color:inherit;
-    }
-    .notes-main{
-      min-height:360px;
-      line-height:1.35;
-    }
+
     .dates-head{
       display:grid;
       grid-template-columns:repeat(5,1fr);
@@ -199,12 +164,107 @@
     }
     .dates-head div{
       text-align:center;
-      padding:3px 2px;
+      padding:5px 3px;
       border:1px solid #000;
       border-bottom:0;
+      background:#f8fafc;
     }
+
+    .table-scroll{
+      width:100%;
+    }
+
+    .checklist{
+      width:100%;
+      border-collapse:collapse;
+      table-layout:fixed;
+      font-size:12px;
+      scroll-behavior:smooth;
+    }
+    .checklist th,
+    .checklist td{
+      border:1px solid var(--border);
+      padding:5px;
+      vertical-align:top;
+    }
+    .checklist th{
+      text-align:center;
+      font-weight:800;
+      background:#f8fafc;
+    }
+
+    .c-bil{width:8%}
+    .c-masa{width:12%}
+    .c-tugas{width:40%}
+    .c-day{width:5.7%}
+    .c-note{width:17%}
+
+    .masa-box{
+      text-align:center;
+      font-weight:700;
+      line-height:1.35;
+      height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:360px;
+    }
+
+    .task-list{
+      margin:0;
+      padding-left:18px;
+      line-height:1.45;
+    }
+    .task-list li{margin:0 0 3px}
+
+    .day-cell{
+      text-align:center;
+      vertical-align:middle !important;
+      padding:0 !important;
+    }
+
+    .tick{
+      appearance:none;
+      -webkit-appearance:none;
+      width:100%;
+      height:34px;
+      margin:0;
+      display:block;
+      cursor:pointer;
+      position:relative;
+      background:#fff;
+    }
+    .tick:checked{
+      background:#eef4ff;
+    }
+    .tick:checked::after{
+      content:"✓";
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:22px;
+      font-weight:800;
+    }
+
+    textarea, input[type="text"]{
+      width:100%;
+      border:0;
+      outline:0;
+      resize:none;
+      font:inherit;
+      background:transparent;
+      color:inherit;
+    }
+
+    .notes-main{
+      min-height:360px;
+      line-height:1.4;
+    }
+
     .extra{
-      margin-top:10px;
+      margin-top:12px;
       width:100%;
       border-collapse:collapse;
       table-layout:fixed;
@@ -212,12 +272,16 @@
     }
     .extra th,.extra td{
       border:1px solid #000;
-      padding:5px;
-      height:30px;
+      padding:6px;
+      height:34px;
+    }
+    .extra th{
+      background:#f8fafc;
     }
     .extra .e-bil{width:8%}
     .extra .e-tarikh{width:25%}
     .extra .e-tugas{width:auto}
+
     .footer{
       display:flex;
       justify-content:space-between;
@@ -242,20 +306,21 @@
       color:var(--muted);
       margin-top:8px;
     }
+
     .toast{
       position:fixed;
-      right:16px;
-      bottom:16px;
+      right:14px;
+      bottom:14px;
       background:#111827;
       color:#fff;
       padding:10px 14px;
-      border-radius:10px;
+      border-radius:12px;
       box-shadow:0 8px 24px rgba(0,0,0,.2);
       opacity:0;
       transform:translateY(10px);
       pointer-events:none;
       transition:.25s ease;
-      z-index:30;
+      z-index:99;
       font-size:14px;
     }
     .toast.show{
@@ -264,14 +329,296 @@
     }
 
     @media (max-width: 900px){
-      .page-wrap{padding:12px}
+      body{
+        background:#edf2f7;
+        font-size:14px;
+      }
+
+      .page-wrap{
+        padding:10px;
+        display:block;
+      }
+
       .sheet{
         width:100%;
         min-height:auto;
-        padding:16px;
+        padding:14px;
+        border-radius:18px;
+        box-shadow:0 10px 24px rgba(15,23,42,.12);
       }
-      .toolbar{justify-content:flex-start}
+
+      .school{
+        font-size:12px;
+        margin-bottom:8px;
+      }
+
+      .title{
+        font-size:16px;
+        line-height:1.35;
+        margin:8px 0 12px;
+      }
+
+      .meta{
+        font-size:13px;
+        display:block;
+      }
+
+      .meta tbody,
+      .meta tr,
+      .meta td{
+        display:block;
+        width:100%;
+      }
+
+      .meta tr{
+        margin-bottom:6px;
+      }
+
+      .meta .label{
+        width:100%;
+        margin-bottom:2px;
+      }
+
+      .line-fill{
+        display:block;
+        width:100%;
+        min-width:0;
+        padding:2px 4px 4px;
+      }
+
+      #namaSelect{
+        min-width:0;
+        display:block;
+      }
+
+      .months{
+        font-size:10px;
+      }
+      .months td{
+        padding:7px 2px;
+      }
+
+      .dates-head{
+        grid-template-columns:repeat(5, minmax(68px,1fr));
+        overflow-x:auto;
+        border-radius:10px 10px 0 0;
+      }
+      .dates-head div{
+        font-size:10px;
+        padding:6px 2px;
+        white-space:normal;
+      }
+
+      .table-scroll{
+        overflow-x:auto;
+        -webkit-overflow-scrolling:touch;
+        border-radius:14px;
+        box-shadow:inset 0 0 0 1px rgba(0,0,0,.06);
+        background:#fff;
+      }
+
+      .checklist{
+        display:block;
+        width:100%;
+        overflow-x:auto;
+        -webkit-overflow-scrolling:touch;
+        white-space:nowrap;
+        border-radius:0 0 14px 14px;
+      }
+
+      .checklist thead,
+      .checklist tbody{
+        display:table;
+        width:100%;
+        min-width:760px;
+        table-layout:fixed;
+      }
+
+      .checklist th,
+      .checklist td{
+        padding:4px;
+        font-size:11px;
+      }
+
+      .checklist th{
+        position:sticky;
+        top:0;
+        z-index:2;
+        background:#f3f6fb;
+      }
+
+      .c-bil{width:52px}
+      .c-masa{width:84px}
+      .c-tugas{width:310px}
+      .c-day{width:48px}
+      .c-note{width:180px}
+
+      .masa-box{
+        min-height:300px;
+        font-size:11px;
+        padding:6px 2px;
+      }
+
+      .task-list{
+        padding-left:16px;
+        line-height:1.45;
+      }
+
+      .task-list li{
+        margin-bottom:4px;
+      }
+
+      .tick{
+        min-height:46px;
+        height:46px;
+        border-radius:0;
+      }
+
+      .tick:checked::after{
+        font-size:26px;
+      }
+
+      .notes-main{
+        min-height:300px;
+        font-size:12px;
+      }
+
+      .extra{
+        display:block;
+        width:100%;
+        overflow-x:auto;
+        -webkit-overflow-scrolling:touch;
+      }
+
+      .extra thead,
+      .extra tbody{
+        display:table;
+        width:100%;
+        min-width:520px;
+        table-layout:fixed;
+      }
+
+      .extra th,
+      .extra td{
+        font-size:12px;
+        padding:6px;
+        height:38px;
+      }
+
+      .extra input{
+        min-height:30px;
+        font-size:12px;
+      }
+
+      .footer{
+        flex-direction:column;
+        gap:14px;
+        margin-top:18px;
+      }
+
+      .sign{
+        width:100%;
+      }
+
+      .sign .label{
+        margin-bottom:22px;
+      }
+
+      .toolbar{
+        justify-content:stretch;
+        gap:8px;
+        padding:10px;
+      }
+
+      .toolbar button{
+        flex:1 1 calc(50% - 8px);
+        min-height:44px;
+        padding:11px 10px;
+        font-size:12px;
+        border-radius:12px;
+      }
+
+      .toolbar .hint{
+        font-size:10px;
+      }
+
+      .toast{
+        left:10px;
+        right:10px;
+        bottom:12px;
+        text-align:center;
+        font-size:13px;
+      }
     }
+
+    @media (max-width: 480px){
+      .page-wrap{
+        padding:8px;
+      }
+
+      .sheet{
+        padding:12px;
+        border-radius:16px;
+      }
+
+      .title{
+        font-size:15px;
+      }
+
+      .school{
+        font-size:11px;
+      }
+
+      .meta{
+        font-size:12px;
+      }
+
+      .months{
+        font-size:9px;
+      }
+
+      .months td{
+        padding:6px 1px;
+      }
+
+      .dates-head{
+        grid-template-columns:repeat(5, minmax(62px,1fr));
+      }
+
+      .dates-head div{
+        font-size:9px;
+      }
+
+      .toolbar button{
+        flex:1 1 100%;
+        font-size:12px;
+      }
+
+      .checklist thead,
+      .checklist tbody{
+        min-width:720px;
+      }
+
+      .c-bil{width:50px}
+      .c-masa{width:80px}
+      .c-tugas{width:290px}
+      .c-day{width:46px}
+      .c-note{width:160px}
+
+      .tick{
+        min-height:48px;
+        height:48px;
+      }
+
+      .tick:checked::after{
+        font-size:24px;
+      }
+
+      .notes-main{
+        min-height:260px;
+      }
+    }
+
     @media print{
       body{background:#fff}
       .toolbar,.toast{display:none !important}
@@ -280,6 +627,7 @@
         width:210mm;
         min-height:297mm;
         box-shadow:none;
+        border-radius:0;
         margin:0;
         padding:8mm 8mm 10mm;
       }
@@ -314,11 +662,25 @@
       <table class="meta">
         <tr>
           <td class="label">NAMA</td>
-          <td>: <span class="line-fill" contenteditable="true" id="nama">PEMBANTU MAKMAL</span></td>
+          <td>:
+            <span class="line-fill">
+              <select id="namaSelect">
+                <option value="">-- PILIH NAMA --</option>
+                <option value="Afifah Binti Abdul Aziz" data-jawatan="Pembantu Makmal C2">Afifah Binti Abdul Aziz</option>
+                <option value="Ida Zarina Binti Idris" data-jawatan="Pembantu Makmal C2 (KUP)">Ida Zarina Binti Idris</option>
+                <option value="Azian Binti Mohamad" data-jawatan="Pembantu Makmal C2 (KUP)">Azian Binti Mohamad</option>
+                <option value="Fatimah Binti Abdul Latiff" data-jawatan="Pembantu Makmal C2 (KUP)">Fatimah Binti Abdul Latiff</option>
+                <option value="Zainun Binti Mohamed Ramthan" data-jawatan="Pembantu Makmal C3 (KUP)">Zainun Binti Mohamed Ramthan</option>
+                <option value="Nor’aini Binti Me Yusoff" data-jawatan="Pembantu Makmal C2 (KUP)">Nor’aini Binti Me Yusoff</option>
+                <option value="Abdul Azam Bin Mohamed" data-jawatan="Pembantu Makmal C2 (KUP)">Abdul Azam Bin Mohamed</option>
+                <option value="Fakarullah Amer Bin Zainal Abidin" data-jawatan="Pembantu Makmal C1">Fakarullah Amer Bin Zainal Abidin</option>
+              </select>
+            </span>
+          </td>
         </tr>
         <tr>
           <td class="label">JAWATAN</td>
-          <td>: <span class="line-fill">PEMBANTU MAKMAL</span></td>
+          <td>: <span class="line-fill" id="jawatan">-</span></td>
         </tr>
         <tr>
           <td class="label">WAKTU BERTUGAS</td>
@@ -347,66 +709,68 @@
 
       <div class="dates-head" id="weekDates"></div>
 
-      <table class="checklist">
-        <colgroup>
-          <col class="c-bil">
-          <col class="c-masa">
-          <col class="c-tugas">
-          <col class="c-day">
-          <col class="c-day">
-          <col class="c-day">
-          <col class="c-day">
-          <col class="c-day">
-          <col class="c-note">
-        </colgroup>
-        <thead>
-          <tr>
-            <th>BIL</th>
-            <th>MASA</th>
-            <th>TUGAS MINGGUAN</th>
-            <th>I</th>
-            <th>S</th>
-            <th>R</th>
-            <th>K</th>
-            <th>J</th>
-            <th>CATATAN</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style="text-align:center;font-weight:700;">1.</td>
-            <td>
-              <div class="masa-box">7:30 pagi<br>–<br>4:30 petang</div>
-            </td>
-            <td>
-              <ol class="task-list">
-                <li>Membuka pintu &amp; tingkap makmal</li>
-                <li>Memastikan pengudaraan dan makmal dalam keadaan baik</li>
-                <li>Memastikan makmal sentiasa bersih</li>
-                <li>Menyemak borang pesanan guru untuk amali / eksperimen</li>
-                <li>Menyediakan alat radas &amp; bahan kimia untuk amali</li>
-                <li>Menyediakan larutan sekiranya diperlukan</li>
-                <li>Memastikan alat radas berfungsi dan lengkap</li>
-                <li>Mengawas &amp; membantu pelajar ketika amali sedang dijalankan</li>
-                <li>Membantu mengendalikan alat bantuan mengajar (ABM)</li>
-                <li>Memastikan alat radas &amp; bahan mencukupi selepas amali / eksperimen dijalankan</li>
-                <li>Membersihkan peralatan amali</li>
-                <li>Menyimpan alat radas &amp; bahan kimia yang digunakan</li>
-                <li>Menyemak dan mengemaskini fail makmal</li>
-                <li>Menyemak stok alat radas dan bahan dari masa ke semasa</li>
-                <li>Memeriksa &amp; menyelenggara kemudahan makmal</li>
-                <li>Mengunci pintu &amp; menutup tingkap sebelum balik</li>
-              </ol>
-            </td>
-            <td class="day-cell"><input class="tick persist" data-key="i" type="checkbox"></td>
-            <td class="day-cell"><input class="tick persist" data-key="s" type="checkbox"></td>
-            <td class="day-cell"><input class="tick persist" data-key="r" type="checkbox"></td>
-            <td class="day-cell"><input class="tick persist" data-key="k" type="checkbox"></td>
-            <td class="day-cell"><input class="tick persist" data-key="j" type="checkbox"></td>
-            <td><textarea class="persist notes-main" data-key="catatan" placeholder="Taip catatan di sini..."></textarea></td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table class="checklist">
+          <colgroup>
+            <col class="c-bil">
+            <col class="c-masa">
+            <col class="c-tugas">
+            <col class="c-day">
+            <col class="c-day">
+            <col class="c-day">
+            <col class="c-day">
+            <col class="c-day">
+            <col class="c-note">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>BIL</th>
+              <th>MASA</th>
+              <th>TUGAS MINGGUAN</th>
+              <th>I</th>
+              <th>S</th>
+              <th>R</th>
+              <th>K</th>
+              <th>J</th>
+              <th>CATATAN</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="text-align:center;font-weight:700;">1.</td>
+              <td>
+                <div class="masa-box">7:30 pagi<br>–<br>4:30 petang</div>
+              </td>
+              <td>
+                <ol class="task-list">
+                  <li>Membuka pintu &amp; tingkap makmal</li>
+                  <li>Memastikan pengudaraan dan makmal dalam keadaan baik</li>
+                  <li>Memastikan makmal sentiasa bersih</li>
+                  <li>Menyemak borang pesanan guru untuk amali / eksperimen</li>
+                  <li>Menyediakan alat radas &amp; bahan kimia untuk amali</li>
+                  <li>Menyediakan larutan sekiranya diperlukan</li>
+                  <li>Memastikan alat radas berfungsi dan lengkap</li>
+                  <li>Mengawas &amp; membantu pelajar ketika amali sedang dijalankan</li>
+                  <li>Membantu mengendalikan alat bantuan mengajar (ABM)</li>
+                  <li>Memastikan alat radas &amp; bahan mencukupi selepas amali / eksperimen dijalankan</li>
+                  <li>Membersihkan peralatan amali</li>
+                  <li>Menyimpan alat radas &amp; bahan kimia yang digunakan</li>
+                  <li>Menyemak dan mengemaskini fail makmal</li>
+                  <li>Menyemak stok alat radas dan bahan dari masa ke semasa</li>
+                  <li>Memeriksa &amp; menyelenggara kemudahan makmal</li>
+                  <li>Mengunci pintu &amp; menutup tingkap sebelum balik</li>
+                </ol>
+              </td>
+              <td class="day-cell"><input class="tick persist" data-key="i" type="checkbox"></td>
+              <td class="day-cell"><input class="tick persist" data-key="s" type="checkbox"></td>
+              <td class="day-cell"><input class="tick persist" data-key="r" type="checkbox"></td>
+              <td class="day-cell"><input class="tick persist" data-key="k" type="checkbox"></td>
+              <td class="day-cell"><input class="tick persist" data-key="j" type="checkbox"></td>
+              <td><textarea class="persist notes-main" data-key="catatan" placeholder="Taip catatan di sini..."></textarea></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <table class="extra">
         <thead>
@@ -453,6 +817,12 @@
   <script>
     const now = new Date();
     const yearEl = document.getElementById('tahun');
+    const namaSelect = document.getElementById('namaSelect');
+    const jawatanEl = document.getElementById('jawatan');
+    const waktu = document.getElementById('waktu');
+    const namaFooter = document.getElementById('namaFooter');
+    const toast = document.getElementById('toast');
+
     yearEl.textContent = now.getFullYear();
 
     document.querySelectorAll('[data-month]').forEach(td=>{
@@ -487,11 +857,6 @@
     }
     renderWeekDates();
 
-    const nama = document.getElementById('nama');
-    const waktu = document.getElementById('waktu');
-    const namaFooter = document.getElementById('namaFooter');
-    const toast = document.getElementById('toast');
-
     function showToast(msg){
       toast.textContent = msg;
       toast.classList.add('show');
@@ -505,31 +870,48 @@
     }
 
     function syncFooter(){
-      const text = (nama.textContent || '').trim() || 'PEMBANTU MAKMAL';
+      const selected = namaSelect.options[namaSelect.selectedIndex];
+      const text = (selected && selected.value) ? selected.value : 'PEMBANTU MAKMAL';
       namaFooter.textContent = text;
+    }
+
+    function syncJawatan(){
+      const selected = namaSelect.options[namaSelect.selectedIndex];
+      jawatanEl.textContent = (selected && selected.dataset.jawatan) ? selected.dataset.jawatan : '-';
     }
 
     function saveData(){
       const data = {
-        nama: nama.textContent.trim(),
+        namaDipilih: namaSelect.value,
+        jawatanDipilih: jawatanEl.textContent.trim(),
         waktu: waktu.textContent.trim()
       };
+
       document.querySelectorAll('.persist').forEach(el=>{
         const key = el.dataset.key;
         if(!key) return;
         data[key] = el.type === 'checkbox' ? el.checked : el.value;
       });
+
       localStorage.setItem(storageKey(), JSON.stringify(data));
+      syncJawatan();
       syncFooter();
     }
 
     function loadData(){
       const raw = localStorage.getItem(storageKey());
-      if(!raw){ syncFooter(); return; }
+      if(!raw){
+        syncJawatan();
+        syncFooter();
+        return;
+      }
+
       try{
         const data = JSON.parse(raw);
-        if(data.nama) nama.textContent = data.nama;
+
+        if(data.namaDipilih) namaSelect.value = data.namaDipilih;
         if(data.waktu) waktu.textContent = data.waktu;
+
         document.querySelectorAll('.persist').forEach(el=>{
           const key = el.dataset.key;
           if(!(key in data)) return;
@@ -537,6 +919,8 @@
           else el.value = data[key] || '';
         });
       }catch(e){}
+
+      syncJawatan();
       syncFooter();
     }
 
@@ -555,7 +939,8 @@
       localStorage.removeItem(storageKey());
       document.querySelectorAll('.tick').forEach(c=>c.checked = false);
       document.querySelectorAll('textarea.persist, input.persist').forEach(el=>el.value='');
-      nama.textContent = 'PEMBANTU MAKMAL';
+      namaSelect.value = '';
+      jawatanEl.textContent = '-';
       waktu.textContent = '7:30 pagi – 4:30 petang ( Hari Persekolahan )';
       syncFooter();
       showToast('Semua data minggu ini dipadam');
@@ -574,7 +959,11 @@
       const monday = getMonday(now);
       const friday = new Date(monday);
       friday.setDate(monday.getDate() + 4);
-      const namaPart = sanitizeFilePart(nama.textContent || 'PEMBANTU_MAKMAL');
+
+      const selected = namaSelect.options[namaSelect.selectedIndex];
+      const namaText = selected && selected.value ? selected.value : 'PEMBANTU_MAKMAL';
+
+      const namaPart = sanitizeFilePart(namaText);
       const weekPart = `minggu_${fmtDate(monday).replaceAll('/','-')}_hingga_${fmtDate(friday).replaceAll('/','-')}`;
       return `Checklist_${namaPart}_${weekPart}`;
     }
@@ -618,7 +1007,13 @@
       el.addEventListener('input', saveData);
       el.addEventListener('change', saveData);
     });
-    nama.addEventListener('input', saveData);
+
+    namaSelect.addEventListener('change', ()=>{
+      syncJawatan();
+      syncFooter();
+      saveData();
+    });
+
     waktu.addEventListener('input', saveData);
 
     loadData();
