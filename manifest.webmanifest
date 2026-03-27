@@ -1,0 +1,8 @@
+{
+  "name": "One Page Report Offline",
+  "short_name": "Report Offline",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0c3f9a"
+}

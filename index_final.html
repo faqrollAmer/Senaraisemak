@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Index One Page Report Offline</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <meta name="theme-color" content="#0c3f9a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <style>
+    :root{
+      --blue:#0c3f9a;
+      --blue-2:#184aab;
+      --line:#cfd5df;
+      --line-dark:#b7c0cd;
+      --text:#1f2c42;
+      --muted:#66738a;
+      --paper:#ffffff;
+      --soft:#f3f6fb;
+      --masa:#e7eef9;
+      --green:#17703b;
+      --gold:#c79d3d;
+      --toolbar:#0f1d3c;
+      --toolbar-line:#23355f;
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:Arial,Helvetica,system-ui,sans-serif;
+      background:#bfc7d4;
+      color:var(--text);
+      -webkit-print-color-adjust:exact;
+      print-color-adjust:exact;
+    }
+
+    .toolbar{
+      position:sticky;
+      top:0;
+      z-index:20;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      background:var(--toolbar);
+      border-bottom:1px solid var(--toolbar-line);
+      box-shadow:0 8px 24px rgba(0,0,0,.22);
+    }
+    .toolbar-title{
+      color:#d5def1;
+      font-size:11px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      margin-right:auto;
+      white-space:nowrap;
+    }
+    .toolbar-badge{
+      color:#b8c8ef;
+      font-size:10px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      margin-right:8px;
+      opacity:.9;
+    }
+    .icon-btn{
+      width:34px;
+      height:34px;
+      border-radius:8px;
+      border:1px solid var(--toolbar-line);
+      background:transparent;
+      color:#dce6fb;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+    }
+    .icon-btn:hover{background:#20335d}
+    .icon-btn svg{width:16px;height:16px;fill:currentColor}
+
+    .page-wrap{
+      padding:20px 12px 34px;
+      display:flex;
+      justify-content:center;
+    }
+    .sheet{
+      width:210mm;
+      min-height:297mm;
+      background:var(--paper);
+      box-shadow:0 16px 48px rgba(19,28,46,.18);
+    }
+    .sheet-inner{
+      padding:8mm 8mm 10mm;
+    }
+
+    .top-title{
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+      border-bottom:2px solid var(--blue);
+      padding-bottom:8px;
+      margin-bottom:12px;
+    }
+    .logo-box{
+      width:54px;
+      flex:0 0 54px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding-top:1px;
+    }
+    .logo-box svg{display:block;width:48px;height:48px}
+    .header-right{flex:1;min-width:0}
+    .school-line-1,
+    .school-line-2,
+    .report-title{margin:0}
+    .school-line-1{
+      font-family:Georgia,'Times New Roman',serif;
+      font-weight:700;
+      font-size:13px;
+      color:var(--blue);
+      line-height:1.18;
+      text-transform:uppercase;
+      letter-spacing:.01em;
+    }
+    .school-line-2{
+      margin-top:1px;
+      color:var(--muted);
+      font-size:9px;
+      line-height:1.18;
+    }
+    .report-title-wrap{
+      margin-top:6px;
+      padding-top:5px;
+      border-top:1px solid var(--line);
+      text-align:left;
+      padding-left:2px;
+    }
+    .report-title{
+      font-family:Georgia,'Times New Roman',serif;
+      color:var(--blue);
+      font-size:11px;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.03em;
+      line-height:1.15;
+    }
+    .report-title .year{color:var(--gold)}
+
+    .meta{
+      width:100%;
+      border-collapse:collapse;
+      margin-bottom:12px;
+    }
+    .meta td{
+      padding:3px 4px;
+      vertical-align:middle;
+    }
+    .meta .label{
+      width:110px;
+      color:#5e6c84;
+      font-size:8.4px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-weight:700;
+    }
+    .meta .sep{
+      width:10px;
+      text-align:center;
+      color:#8a95a7;
+      font-weight:700;
+    }
+    .meta .value{
+      border-bottom:1px solid var(--line-dark);
+      font-size:8.8px;
+      font-weight:500;
+      padding-top:2px;
+      padding-bottom:4px;
+    }
+    .meta strong{font-size:8.9px}
+
+    #namaSelect{
+      width:100%;
+      border:0;
+      outline:0;
+      background:transparent;
+      font:inherit;
+      font-weight:700;
+      color:var(--text);
+      padding:0;
+      appearance:none;
+      -webkit-appearance:none;
+      text-transform:uppercase;
+      letter-spacing:.01em;
+    }
+    .meta .value.uppercase,
+    #jawatanText{
+      font-weight:500;
+      text-transform:uppercase;
+      letter-spacing:.01em;
+    }
+
+    .months-caption{
+      text-align:center;
+      color:#66738a;
+      font-size:8px;
+      letter-spacing:.15em;
+      text-transform:uppercase;
+      font-weight:700;
+      margin-bottom:4px;
+    }
+    .months{
+      width:100%;
+      border-collapse:collapse;
+      margin-bottom:10px;
+      table-layout:fixed;
+      font-size:8px;
+      font-weight:700;
+      color:#5c697f;
+    }
+    .months td{
+      border:1px solid var(--line);
+      text-align:center;
+      padding:5px 4px;
+      background:#fff;
+    }
+    .months td.active{
+      background:var(--blue);
+      color:#fff;
+      border-color:var(--blue);
+    }
+
+    .checklist,
+    .extra-table{
+      width:100%;
+      border-collapse:collapse;
+      table-layout:fixed;
+    }
+    .checklist th,
+    .checklist td,
+    .extra-table th,
+    .extra-table td{
+      border:1px solid var(--line);
+    }
+    .checklist thead th,
+    .extra-table thead th{
+      background:var(--blue);
+      color:#fff;
+      text-transform:uppercase;
+      font-size:7px;
+      letter-spacing:.04em;
+      font-weight:700;
+      text-align:center;
+      padding:4px 2px;
+      line-height:1.05;
+    }
+    .checklist tbody td{
+      background:#fff;
+      font-size:7.1px;
+      vertical-align:middle;
+      padding:3px 4px;
+    }
+    .checklist tbody tr:nth-child(even) td:not(.masa-cell){background:#f7f9fc}
+
+    .col-bil{width:4.8%}
+    .col-masa{width:10%}
+    .col-tugas{width:46.5%}
+    .col-day{width:5%}
+    .col-note{width:14.7%}
+
+    .bil-cell{
+      text-align:center;
+      color:#56657d;
+      font-weight:700;
+      vertical-align:top!important;
+      padding-top:6px!important;
+    }
+    .masa-cell{
+      background:var(--masa)!important;
+      padding:0!important;
+      text-align:center;
+    }
+    .masa-box{
+      height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      color:var(--blue);
+      font-weight:700;
+      line-height:1.85;
+      font-size:7.4px;
+      letter-spacing:.01em;
+      min-height:100%;
+      padding:4px 2px;
+    }
+    .task-cell{
+      line-height:1.05;
+      padding-top:5px!important;
+      padding-bottom:5px!important;
+      font-size:7.1px;
+    }
+    .day-head{
+      color:#fff!important;
+    }
+    .day-head.day-i{background:#16a34a!important;border-color:#0f8a3d!important;}
+    .day-head.day-s{background:#f59e0b!important;border-color:#d48806!important;}
+    .day-head.day-r{background:#ef4444!important;border-color:#d93636!important;}
+    .day-head.day-k{background:#8b5cf6!important;border-color:#7447dd!important;}
+    .day-head.day-j{background:#06b6d4!important;border-color:#0891b2!important;}
+    .day-head .day-letter{
+      display:block;
+      font-size:10px;
+      font-weight:800;
+      margin-bottom:1px;
+    }
+    .day-head .day-date{
+      display:block;
+      font-size:4px;
+      line-height:1;
+      opacity:.96;
+      letter-spacing:0;
+    }
+    .day-cell{
+      padding:0!important;
+      text-align:center;
+      position:relative;
+      height:34px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .day-cell.checked{background:#f4fff7!important}
+    .day-cell.checked::after{
+      content:"✓";
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#18a34a;
+      font-size:14px;
+      line-height:1;
+      font-weight:800;
+      transform:rotate(-8deg);
+    }
+    .note-cell{padding:0!important}
+    .note-input,
+    .extra-input{
+      width:100%;
+      border:0;
+      outline:0;
+      background:transparent;
+      font:inherit;
+      color:inherit;
+      padding:4px 5px;
+    }
+    .note-input{
+      height:32px;
+      min-height:32px;
+      max-height:32px;
+      font-size:6px;
+      line-height:1.15;
+      font-weight:500;
+      resize:none;
+      overflow:auto;
+      display:block;
+      white-space:pre-wrap;
+      overflow-wrap:anywhere;
+      word-break:break-word;
+    }
+    .extra-input{font-size:7px;height:28px}
+
+    .extra-table thead th{font-size:7px}
+    .extra-table tbody td{
+      background:#fff;
+      font-size:7px;
+      padding:0;
+      height:28px;
+    }
+    .extra-table tbody td:first-child{
+      text-align:center;
+      font-weight:700;
+      color:#56657d;
+      padding:4px 0;
+      font-size:8px;
+    }
+    .extra-table tbody td:nth-child(2){width:13%}
+
+    .footer{
+      margin-top:18px;
+      border-top:1px solid var(--line);
+      padding-top:14px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+    }
+    .sign-label{
+      color:#66738a;
+      font-size:8.2px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      font-weight:700;
+      margin-bottom:32px;
+    }
+    .sign-line{
+      border-top:1.4px solid var(--line-dark);
+      padding-top:6px;
+      min-height:18px;
+      color:var(--blue);
+      font-weight:700;
+      font-size:8.8px;
+      text-transform:uppercase;
+    }
+
+    .toast{
+      position:fixed;
+      right:16px;
+      bottom:16px;
+      background:#102148;
+      color:#e8efff;
+      border:1px solid #2b4277;
+      border-radius:10px;
+      padding:10px 14px;
+      font-size:12px;
+      opacity:0;
+      transform:translateY(8px);
+      pointer-events:none;
+      transition:.2s ease;
+    }
+    .toast.show{opacity:1;transform:translateY(0)}
+
+    @media (max-width: 900px){
+      .toolbar-title{display:none}
+      .page-wrap{padding:10px 6px 20px}
+      .sheet{width:100%;min-height:auto}
+      .sheet-inner{padding:14px}
+      .logo-box{width:44px;flex-basis:44px}
+      .logo-box svg{width:40px;height:40px}
+      .school-line-1{font-size:11px}
+      .school-line-2{font-size:8px}
+      .report-title{font-size:10px}
+      .meta .label{width:88px}
+    }
+
+    @media print{
+      body{background:#fff}
+      .toolbar,.toast{display:none!important}
+      .page-wrap{padding:0}
+      .sheet{box-shadow:none;width:210mm;min-height:297mm}
+      @page{size:A4 portrait;margin:0}
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <div class="toolbar-title">One Page Report</div>
+    <div class="toolbar-badge">Offline per staff</div>
+    <button class="icon-btn" title="Cetak / PDF" onclick="window.print()">
+      <svg viewBox="0 0 24 24"><path d="M6 9V3h12v6H6Zm2-4v2h8V5H8Zm10 6h2a2 2 0 0 1 2 2v4h-4v4H6v-4H2v-4a2 2 0 0 1 2-2h14ZM8 19h8v-3H8v3Z"/></svg>
+    </button>
+    <button class="icon-btn" title="Backup staff ini" onclick="exportCurrentStaff()">
+      <svg viewBox="0 0 24 24"><path d="M12 3l4 4h-3v6h-2V7H8l4-4Zm-7 9h2v5h10v-5h2v7H5v-7Z"/></svg>
+    </button>
+    <button class="icon-btn" title="Import backup staff" onclick="document.getElementById('importFile').click()">
+      <svg viewBox="0 0 24 24"><path d="M12 21l-4-4h3v-6h2v6h3l-4 4ZM5 5h14v5h-2V7H7v3H5V5Z"/></svg>
+    </button>
+    <button class="icon-btn" title="Tanda semua" onclick="markAll()">
+      <svg viewBox="0 0 24 24"><path d="m9 16.2-3.5-3.5L4 14.2 9 19l11-11-1.4-1.4L9 16.2Z"/></svg>
+    </button>
+    <button class="icon-btn" title="Reset tanda" onclick="clearChecks()">
+      <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7a5 5 0 1 1-4.9 6H5.1A7 7 0 1 0 12 5Z"/></svg>
+    </button>
+  </div>
+  <input type="file" id="importFile" accept="application/json" hidden />
+
+  <div class="page-wrap">
+    <div class="sheet" id="sheet">
+      <div class="sheet-inner">
+        <div class="top-title">
+          <div class="logo-box" aria-hidden="true">
+            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="32" cy="32" r="30" fill="#f3f6fb" stroke="#0c3f9a" stroke-width="2.5"/>
+              <path d="M20 18h16l8 8v20H20z" fill="#fff" stroke="#0c3f9a" stroke-width="2"/>
+              <path d="M36 18v10h10" fill="none" stroke="#0c3f9a" stroke-width="2"/>
+              <path d="M25 34l4 4 10-10" fill="none" stroke="#c62626" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M25 44h14" stroke="#0c3f9a" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="header-right">
+            <p class="school-line-1">Sekolah Menengah Kebangsaan Mentakab</p>
+            <p class="school-line-2">Jalan Pekeliling, 28400 Mentakab, Pahang Darul Makmur</p>
+            <div class="report-title-wrap">
+              <p class="report-title">Senarai Semak Tugasan Tahun <span class="year" id="tahun">2026</span></p>
+            </div>
+          </div>
+        </div>
+
+        <table class="meta">
+          <tr>
+            <td class="label">Nama</td>
+            <td class="sep">:</td>
+            <td class="value">
+              <select id="namaSelect">
+                <option value="Afifah Binti Abdul Aziz" data-jawatan="Pembantu Makmal C2">Afifah Binti Abdul Aziz</option>
+                <option value="Ida Zarina Binti Idris" data-jawatan="Pembantu Makmal C2 (KUP)" selected>Ida Zarina Binti Idris</option>
+                <option value="Azian Binti Mohamad" data-jawatan="Pembantu Makmal C2 (KUP)">Azian Binti Mohamad</option>
+                <option value="Fatimah Binti Abdul Latiff" data-jawatan="Pembantu Makmal C2 (KUP)">Fatimah Binti Abdul Latiff</option>
+                <option value="Zainun Binti Mohamed Ramthan" data-jawatan="Pembantu Makmal C3 (KUP)">Zainun Binti Mohamed Ramthan</option>
+                <option value="Nor'aini Binti Me Yusoff" data-jawatan="Pembantu Makmal C2 (KUP)">Nor'aini Binti Me Yusoff</option>
+                <option value="Abdul Azam Bin Mohamed" data-jawatan="Pembantu Makmal C2 (KUP)">Abdul Azam Bin Mohamed</option>
+                <option value="Fakarullah Amer Bin Zainal Abidin" data-jawatan="Pembantu Makmal C1">Fakarullah Amer Bin Zainal Abidin</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td class="label">Jawatan</td>
+            <td class="sep">:</td>
+            <td class="value uppercase"><span id="jawatanText">Pembantu Makmal C2 (KUP)</span></td>
+          </tr>
+          <tr>
+            <td class="label">Waktu Bertugas</td>
+            <td class="sep">:</td>
+            <td class="value"><strong>7:30 pagi – 4:30 petang (Hari Persekolahan)</strong></td>
+          </tr>
+        </table>
+
+        <div class="months-caption">Bulan</div>
+        <table class="months">
+          <tr>
+            <td data-month="0">Jan</td>
+            <td data-month="1">Feb</td>
+            <td data-month="2">Mac</td>
+            <td data-month="3">Apr</td>
+            <td data-month="4">Mei</td>
+            <td data-month="5">Jun</td>
+          </tr>
+          <tr>
+            <td data-month="6">Jul</td>
+            <td data-month="7">Ogos</td>
+            <td data-month="8">Sep</td>
+            <td data-month="9">Okt</td>
+            <td data-month="10">Nov</td>
+            <td data-month="11">Dis</td>
+          </tr>
+        </table>
+
+        <table class="checklist">
+          <colgroup>
+            <col class="col-bil">
+            <col class="col-masa">
+            <col class="col-tugas">
+            <col class="col-day">
+            <col class="col-day">
+            <col class="col-day">
+            <col class="col-day">
+            <col class="col-day">
+            <col class="col-note">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Bil.</th>
+              <th>Masa</th>
+              <th>Tugas Mingguan</th>
+              <th class="day-head day-i"><span class="day-letter">I</span><span class="day-date" id="date0"></span></th>
+              <th class="day-head day-s"><span class="day-letter">S</span><span class="day-date" id="date1"></span></th>
+              <th class="day-head day-r"><span class="day-letter">R</span><span class="day-date" id="date2"></span></th>
+              <th class="day-head day-k"><span class="day-letter">K</span><span class="day-date" id="date3"></span></th>
+              <th class="day-head day-j"><span class="day-letter">J</span><span class="day-date" id="date4"></span></th>
+              <th>Catatan</th>
+            </tr>
+          </thead>
+          <tbody id="taskBody"></tbody>
+        </table>
+
+        <table class="extra-table">
+          <thead>
+            <tr>
+              <th style="width:4.8%">Bil.</th>
+              <th style="width:13%">Tarikh</th>
+              <th>Tugas Tambahan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1.</td>
+              <td><input class="extra-input persist" data-key="extra_date_1" /></td>
+              <td><input class="extra-input persist" data-key="extra_task_1" /></td>
+            </tr>
+            <tr>
+              <td>2.</td>
+              <td><input class="extra-input persist" data-key="extra_date_2" /></td>
+              <td><input class="extra-input persist" data-key="extra_task_2" /></td>
+            </tr>
+            <tr>
+              <td>3.</td>
+              <td><input class="extra-input persist" data-key="extra_date_3" /></td>
+              <td><input class="extra-input persist" data-key="extra_task_3" /></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="footer">
+          <div>
+            <div class="sign-label">Disediakan Oleh :</div>
+            <div class="sign-line" id="footerName">IDA ZARINA BINTI IDRIS</div>
+          </div>
+          <div>
+            <div class="sign-label">Disahkan / Disemak :</div>
+            <div class="sign-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Disimpan</div>
+
+  <script>
+    const TASKS = [
+      'Membuka pintu & tingkap makmal',
+      'Memastikan pengudaraan dan makmal dalam keadaan baik',
+      'Memastikan makmal sentiasa bersih',
+      'Menyemak borang pesanan guru untuk amali / eksperimen.',
+      'Menyediakan alat radas & bahan kimia untuk amali.',
+      'Menyediakan larutan sekiranya diperlukan',
+      'Memastikan alat radas berfungsi dan lengkap.',
+      'Mengawas & membantu pelajar ketika amali sedang dijalankan.',
+      'Membantu mengendalikan alat bantuan mengajar (ABM).',
+      'Memastikan alat radas & bahan mencukupi selepas amali / eksperimen dijalankan.',
+      'Membersihkan peralatan amali.',
+      'Menyimpan alat radas & bahan kimia yang digunakan.',
+      'Menyemak dan mengemaskini fail makmal.',
+      'Menyemak stok alat radas dan bahan dari masa ke semasa.',
+      'Memeriksa & menyelenggara kemudahan makmal.',
+      'Mengunci pintu & menutup tingkap sebelum balik.'
+    ];
+
+    const APP_STORAGE_KEY = 'one_page_report_staff_store_v4';
+    const namaSelect = document.getElementById('namaSelect');
+    const jawatanText = document.getElementById('jawatanText');
+    const footerName = document.getElementById('footerName');
+    const taskBody = document.getElementById('taskBody');
+    const toast = document.getElementById('toast');
+    const yearEl = document.getElementById('tahun');
+    const importFile = document.getElementById('importFile');
+    const now = new Date();
+    let appStore = loadStore();
+    let state = null;
+
+    yearEl.textContent = now.getFullYear();
+    markCurrentMonth(now.getMonth());
+    fillWeekDates(now);
+    switchStaff(appStore.lastNama || namaSelect.value);
+
+    namaSelect.addEventListener('change', () => {
+      switchStaff(namaSelect.value);
+      showToast('Rekod staff ditukar');
+    });
+
+    document.querySelectorAll('.persist').forEach(input => {
+      input.addEventListener('input', () => {
+        state.persist[input.dataset.key] = input.value;
+        saveStore();
+      });
+    });
+
+    importFile.addEventListener('change', importCurrentStaff);
+
+    function defaultStaffState(){
+      return { checks:{}, persist:{} };
+    }
+
+    function staffKey(name){
+      return String(name || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'') || 'staff';
+    }
+
+    function loadStore(){
+      try{
+        const raw = localStorage.getItem(APP_STORAGE_KEY);
+        const parsed = raw ? JSON.parse(raw) : null;
+        if(parsed && parsed.staffData) return parsed;
+      }catch(e){}
+      return { lastNama:'', staffData:{} };
+    }
+
+    function switchStaff(name){
+      applySelectedName(name);
+      const key = staffKey(name);
+      if(!appStore.staffData[key]) appStore.staffData[key] = defaultStaffState();
+      state = appStore.staffData[key];
+      appStore.lastNama = name;
+      buildTasks();
+      hydratePersistInputs();
+      saveStore(false);
+    }
+
+    function saveStore(show=true){
+      appStore.lastNama = namaSelect.value;
+      appStore.staffData[staffKey(namaSelect.value)] = state;
+      localStorage.setItem(APP_STORAGE_KEY, JSON.stringify(appStore));
+      if(show) showToast('Disimpan di peranti ini');
+    }
+
+    function buildTasks(){
+      const fragment = document.createDocumentFragment();
+      TASKS.forEach((task, index) => {
+        const tr = document.createElement('tr');
+
+        const tdBil = document.createElement('td');
+        tdBil.className = 'bil-cell';
+        tdBil.textContent = `${index + 1}.`;
+        tr.appendChild(tdBil);
+
+        if(index === 0){
+          const tdMasa = document.createElement('td');
+          tdMasa.className = 'masa-cell';
+          tdMasa.rowSpan = TASKS.length;
+          tdMasa.innerHTML = '<div class="masa-box"><div>7:30<br>pagi</div><div>–</div><div>4:30<br>petang</div></div>';
+          tr.appendChild(tdMasa);
+        }
+
+        const tdTask = document.createElement('td');
+        tdTask.className = 'task-cell';
+        tdTask.textContent = task;
+        tr.appendChild(tdTask);
+
+        for(let d = 0; d < 5; d++){
+          const td = document.createElement('td');
+          td.className = 'day-cell';
+          const key = `check_${index}_${d}`;
+          if(state.checks[key]) td.classList.add('checked');
+          td.addEventListener('click', () => {
+            td.classList.toggle('checked');
+            state.checks[key] = td.classList.contains('checked');
+            saveStore();
+          });
+          tr.appendChild(td);
+        }
+
+        const tdNote = document.createElement('td');
+        tdNote.className = 'note-cell';
+        tdNote.innerHTML = `<textarea class="note-input" rows="2" maxlength="120" data-key="note_${index}">${escapeHtml(state.persist[`note_${index}`] || '')}</textarea>`;
+        tr.appendChild(tdNote);
+        fragment.appendChild(tr);
+      });
+
+      taskBody.innerHTML = '';
+      taskBody.appendChild(fragment);
+
+      taskBody.querySelectorAll('.note-input').forEach(input => {
+        input.addEventListener('input', () => {
+          state.persist[input.dataset.key] = input.value;
+          saveStore();
+        });
+      });
+    }
+
+    function hydratePersistInputs(){
+      document.querySelectorAll('.persist').forEach(input => {
+        input.value = state.persist[input.dataset.key] || '';
+      });
+    }
+
+    function exportCurrentStaff(){
+      const payload = {
+        nama: namaSelect.value,
+        jawatan: jawatanText.textContent,
+        savedAt: new Date().toISOString(),
+        data: state
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `backup-${staffKey(namaSelect.value)}.json`;
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+      showToast('Backup staff berjaya dimuat turun');
+    }
+
+    function importCurrentStaff(event){
+      const file = event.target.files && event.target.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try{
+          const parsed = JSON.parse(reader.result);
+          if(!parsed || !parsed.data) throw new Error('Format tidak sah');
+          state = {
+            checks: parsed.data.checks || {},
+            persist: parsed.data.persist || {}
+          };
+          appStore.staffData[staffKey(namaSelect.value)] = state;
+          buildTasks();
+          hydratePersistInputs();
+          saveStore(false);
+          showToast('Backup staff berjaya dipulihkan');
+        }catch(e){
+          showToast('Fail backup tidak sah');
+        }
+        event.target.value = '';
+      };
+      reader.readAsText(file);
+    }
+
+
+    function fillWeekDates(date){
+      const monday = getMonday(date);
+      for(let i = 0; i < 5; i++){
+        const d = new Date(monday);
+        d.setDate(monday.getDate() + i);
+        document.getElementById(`date${i}`).textContent = formatDayDate(d);
+      }
+    }
+
+    function getMonday(date){
+      const d = new Date(date);
+      const day = d.getDay();
+      const diff = day === 0 ? -6 : 1 - day;
+      d.setDate(d.getDate() + diff);
+      d.setHours(0,0,0,0);
+      return d;
+    }
+
+    function formatDayDate(d){
+      const dd = String(d.getDate()).padStart(2, '0');
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      return `${dd}/${mm}`;
+    }
+
+    function markCurrentMonth(monthIndex){
+      document.querySelectorAll('[data-month]').forEach(cell => {
+        cell.classList.toggle('active', Number(cell.dataset.month) === monthIndex);
+      });
+    }
+
+    function applySelectedName(name){
+      const option = Array.from(namaSelect.options).find(opt => opt.value === name) || namaSelect.options[0];
+      namaSelect.value = option.value;
+      jawatanText.textContent = option.dataset.jawatan || '-';
+      footerName.textContent = option.value.toUpperCase();
+    }
+
+    function showToast(message){
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(showToast.t);
+      showToast.t = setTimeout(() => toast.classList.remove('show'), 1100);
+    }
+
+    function markAll(){
+      document.querySelectorAll('.day-cell').forEach(cell => cell.classList.add('checked'));
+      state.checks = {};
+      TASKS.forEach((_, i) => {
+        for(let d = 0; d < 5; d++) state.checks[`check_${i}_${d}`] = true;
+      });
+      saveStore();
+    }
+
+    function clearChecks(){
+      document.querySelectorAll('.day-cell').forEach(cell => cell.classList.remove('checked'));
+      state.checks = {};
+      saveStore();
+    }
+
+    function escapeHtml(str){
+      return str.replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+    }
+  </script>
+
+  <script>
+    if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>
