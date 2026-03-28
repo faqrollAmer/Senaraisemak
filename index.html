@@ -1028,7 +1028,7 @@
         if(isIOSLike()){
           iosWindow = window.open('', '_blank');
           if(iosWindow){
-            iosWindow.document.write(`<!DOCTYPE html><html lang="ms"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>${escapeHtml(filename)}</title><style>html,body{margin:0;padding:0;background:#0f172a;color:#e5eefc;font-family:Arial,Helvetica,sans-serif;height:100%}body{display:grid;place-items:center;text-align:center;padding:24px}.card{max-width:320px;line-height:1.5}.spinner{width:30px;height:30px;border:3px solid rgba(255,255,255,.18);border-top-color:#fff;border-radius:50%;margin:0 auto 14px;animation:spin .9s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}</style></head><body><div class="card"><div class="spinner"></div><div>Menyediakan JPG… sila tunggu sebentar.</div></div></body></html>`);
+            iosWindow.document.write(`<!DOCTYPE html><html lang="ms"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>${escapeHtml(filename)}</title><style>html,body{margin:0;padding:0;background:#0f172a;color:#e5eefc;font-family:Arial,Helvetica,sans-serif;height:100%}body{display:grid;place-items:center;text-align:center;padding:24px}.card{max-width:320px;line-height:1.5}.spinner{width:30px;height:30px;border:3px solid rgba(255,255,255,.18);border-top-color:#fff;border-radius:50%;margin:0 auto 14px;animation:spin .9s linear infinite}.actions{margin-top:16px}.actions button{border:1px solid rgba(255,255,255,.2);background:#1e293b;color:#fff;border-radius:10px;padding:10px 14px;font-size:14px;font-weight:700}</style></head><body><div class="card"><div class="spinner"></div><div>Menyediakan JPG… sila tunggu sebentar.</div><div class="actions"><button onclick="if(window.opener){window.close()}else if(history.length>1){history.back()}">Kembali</button></div></div></body></html>`);
             iosWindow.document.close();
           }
         }
@@ -1148,31 +1148,63 @@
     }
 
     function createExportClone(){
-      const clone = document.getElementById('sheet').cloneNode(true);
-      clone.querySelectorAll('textarea').forEach(textarea => {
+      const liveSheet = document.getElementById('sheet');
+      const clone = liveSheet.cloneNode(true);
+
+      const liveDayCells = Array.from(liveSheet.querySelectorAll('.day-cell'));
+      const cloneDayCells = Array.from(clone.querySelectorAll('.day-cell'));
+      cloneDayCells.forEach((cell, index) => {
+        cell.classList.toggle('checked', liveDayCells[index] && liveDayCells[index].classList.contains('checked'));
+      });
+
+      const liveTextareas = Array.from(liveSheet.querySelectorAll('textarea'));
+      const cloneTextareas = Array.from(clone.querySelectorAll('textarea'));
+      cloneTextareas.forEach((textarea, index) => {
+        const live = liveTextareas[index];
         const box = document.createElement('div');
         box.className = textarea.className + ' export-static';
-        box.style.minHeight = `${textarea.offsetHeight || 36}px`;
-        box.textContent = textarea.value || '';
+        box.style.minHeight = `${(live && live.offsetHeight) || textarea.offsetHeight || 36}px`;
+        box.textContent = live ? live.value || '' : textarea.value || '';
         textarea.replaceWith(box);
       });
-      clone.querySelectorAll('input').forEach(input => {
+
+      const liveInputs = Array.from(liveSheet.querySelectorAll('input'));
+      const cloneInputs = Array.from(clone.querySelectorAll('input'));
+      cloneInputs.forEach((input, index) => {
+        const live = liveInputs[index];
         const box = document.createElement('div');
         box.className = input.className + ' export-static';
-        box.style.minHeight = `${input.offsetHeight || 24}px`;
-        box.textContent = input.value || '';
+        box.style.minHeight = `${(live && live.offsetHeight) || input.offsetHeight || 24}px`;
+        box.textContent = live ? live.value || '' : input.value || '';
         input.replaceWith(box);
       });
-      clone.querySelectorAll('select').forEach(select => {
+
+      const liveSelects = Array.from(liveSheet.querySelectorAll('select'));
+      const cloneSelects = Array.from(clone.querySelectorAll('select'));
+      cloneSelects.forEach((select, index) => {
+        const live = liveSelects[index] || select;
+        const css = getComputedStyle(live);
         const box = document.createElement('div');
         box.className = 'export-static';
-        box.style.font = getComputedStyle(select).font;
-        box.style.fontWeight = getComputedStyle(select).fontWeight;
-        box.style.textTransform = getComputedStyle(select).textTransform;
-        box.style.letterSpacing = getComputedStyle(select).letterSpacing;
-        box.textContent = select.value || '';
+        box.style.font = css.font;
+        box.style.fontWeight = css.fontWeight;
+        box.style.textTransform = css.textTransform;
+        box.style.letterSpacing = css.letterSpacing;
+        box.style.color = css.color;
+        box.textContent = live.value || select.value || '';
         select.replaceWith(box);
       });
+
+      const selectedOption = namaSelect.options[namaSelect.selectedIndex] || namaSelect.options[0];
+      const currentName = ((selectedOption && selectedOption.value) || namaSelect.value || '').toUpperCase();
+      const currentJawatan = ((selectedOption && selectedOption.dataset.jawatan) || jawatanText.textContent || '').toUpperCase();
+
+      const clonedJawatan = clone.querySelector('#jawatanText');
+      if(clonedJawatan) clonedJawatan.textContent = currentJawatan;
+
+      const clonedFooter = clone.querySelector('#footerName');
+      if(clonedFooter) clonedFooter.textContent = currentName;
+
       return clone;
     }
 
@@ -1192,7 +1224,7 @@
         const win = iosWindow && !iosWindow.closed ? iosWindow : window.open('', '_blank');
         if(!win) throw new Error('Tetingkap simpanan dihalang oleh pelayar');
         win.document.open();
-        win.document.write(`<!DOCTYPE html><html lang="ms"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>${escapeHtml(filename)}</title><style>html,body{margin:0;padding:0;background:#111;color:#e5eefc;font-family:Arial,Helvetica,sans-serif}img{display:block;max-width:100%;height:auto;margin:0 auto;background:#fff}header{position:sticky;top:0;padding:12px 14px;background:#0f172a;border-bottom:1px solid rgba(255,255,255,.12);font-size:14px;text-align:center}main{padding:12px}</style></head><body><header>Tekan lama pada imej ini, kemudian pilih Simpan Imej / Save to Photos</header><main><img src="${dataUrl}" alt="${escapeHtml(filename)}"></main></body></html>`);
+        win.document.write(`<!DOCTYPE html><html lang="ms"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>${escapeHtml(filename)}</title><style>html,body{margin:0;padding:0;background:#111;color:#e5eefc;font-family:Arial,Helvetica,sans-serif}.topbar{position:sticky;top:0;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;background:#0f172a;border-bottom:1px solid rgba(255,255,255,.12)}.help{font-size:14px;line-height:1.35}.back-btn{border:1px solid rgba(255,255,255,.2);background:#1e293b;color:#fff;border-radius:10px;padding:10px 14px;font-size:14px;font-weight:700;white-space:nowrap}img{display:block;max-width:100%;height:auto;margin:0 auto;background:#fff}main{padding:12px}</style></head><body><div class="topbar"><div class="help">Tekan lama pada imej ini, kemudian pilih Simpan Imej / Save to Photos</div><button class="back-btn" onclick="if(window.opener){window.close()}else if(history.length>1){history.back()}else{window.close()}">Kembali</button></div><main><img src="${dataUrl}" alt="${escapeHtml(filename)}"></main></body></html>`);
         win.document.close();
         return;
       }
