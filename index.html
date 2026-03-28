@@ -1154,32 +1154,64 @@
     }
 
     function createExportClone(){
-      const clone = document.getElementById('sheet').cloneNode(true);
-      clone.querySelectorAll('textarea').forEach(textarea => {
+      const sourceSheet = document.getElementById('sheet');
+      const clone = sourceSheet.cloneNode(true);
+
+      syncCloneDisplayValues(sourceSheet, clone);
+
+      const sourceTextareas = Array.from(sourceSheet.querySelectorAll('textarea'));
+      clone.querySelectorAll('textarea').forEach((textarea, index) => {
+        const liveTextarea = sourceTextareas[index];
         const box = document.createElement('div');
         box.className = textarea.className + ' export-static';
-        box.style.minHeight = `${textarea.offsetHeight || 36}px`;
-        box.textContent = textarea.value || '';
+        box.style.minHeight = `${liveTextarea?.offsetHeight || textarea.offsetHeight || 36}px`;
+        box.textContent = (liveTextarea ? liveTextarea.value : textarea.value) || '';
         textarea.replaceWith(box);
       });
-      clone.querySelectorAll('input').forEach(input => {
+
+      const sourceInputs = Array.from(sourceSheet.querySelectorAll('input'));
+      clone.querySelectorAll('input').forEach((input, index) => {
+        const liveInput = sourceInputs[index];
         const box = document.createElement('div');
         box.className = input.className + ' export-static';
-        box.style.minHeight = `${input.offsetHeight || 24}px`;
-        box.textContent = input.value || '';
+        box.style.minHeight = `${liveInput?.offsetHeight || input.offsetHeight || 24}px`;
+        box.textContent = (liveInput ? liveInput.value : input.value) || '';
         input.replaceWith(box);
       });
-      clone.querySelectorAll('select').forEach(select => {
+
+      const sourceSelects = Array.from(sourceSheet.querySelectorAll('select'));
+      clone.querySelectorAll('select').forEach((select, index) => {
+        const liveSelect = sourceSelects[index];
         const box = document.createElement('div');
         box.className = 'export-static';
-        box.style.font = getComputedStyle(select).font;
-        box.style.fontWeight = getComputedStyle(select).fontWeight;
-        box.style.textTransform = getComputedStyle(select).textTransform;
-        box.style.letterSpacing = getComputedStyle(select).letterSpacing;
-        box.textContent = select.value || '';
+        box.style.font = getComputedStyle(liveSelect || select).font;
+        box.style.fontWeight = getComputedStyle(liveSelect || select).fontWeight;
+        box.style.textTransform = getComputedStyle(liveSelect || select).textTransform;
+        box.style.letterSpacing = getComputedStyle(liveSelect || select).letterSpacing;
+        box.textContent = (liveSelect ? liveSelect.value : select.value) || '';
         select.replaceWith(box);
       });
       return clone;
+    }
+
+    function syncCloneDisplayValues(sourceSheet, clone){
+      const liveNama = sourceSheet.querySelector('#namaSelect')?.value || '';
+      const liveJawatan = sourceSheet.querySelector('#jawatanText')?.textContent || '';
+      const liveFooterName = sourceSheet.querySelector('#footerName')?.textContent || liveNama.toUpperCase();
+
+      const cloneNamaSelect = clone.querySelector('#namaSelect');
+      if(cloneNamaSelect){
+        cloneNamaSelect.value = liveNama;
+        Array.from(cloneNamaSelect.options).forEach(option => {
+          option.selected = option.value === liveNama;
+        });
+      }
+
+      const cloneJawatan = clone.querySelector('#jawatanText');
+      if(cloneJawatan) cloneJawatan.textContent = liveJawatan;
+
+      const cloneFooterName = clone.querySelector('#footerName');
+      if(cloneFooterName) cloneFooterName.textContent = liveFooterName;
     }
 
     function loadImage(src){
