@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-
 <html lang="ms">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>One Page Report</title>
+  <title>Index One Page Report Offline</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <meta name="theme-color" content="#0c3f9a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <style>
     :root{
       --blue:#0c3f9a;
@@ -21,6 +24,7 @@
       --toolbar:#0f1d3c;
       --toolbar-line:#23355f;
     }
+
     *{box-sizing:border-box}
     html,body{margin:0;padding:0}
     body{
@@ -31,390 +35,568 @@
       print-color-adjust:exact;
     }
 
-```
-/* ── Toolbar ── */
-.toolbar{
-  position:sticky;top:0;z-index:20;
-  display:flex;align-items:center;gap:6px;
-  padding:7px 12px;
-  background:var(--toolbar);
-  border-bottom:1px solid var(--toolbar-line);
-  box-shadow:0 4px 14px rgba(0,0,0,.22);
-}
-.toolbar-title{
-  color:#d5def1;font-size:10px;letter-spacing:.12em;
-  text-transform:uppercase;margin-right:auto;white-space:nowrap;
-}
-.icon-btn{
-  width:28px;height:28px;border-radius:6px;
-  border:1px solid var(--toolbar-line);
-  background:transparent;color:#dce6fb;
-  display:inline-flex;align-items:center;justify-content:center;
-  cursor:pointer;flex-shrink:0;
-}
-.icon-btn:hover{background:#20335d}
-.icon-btn svg{width:14px;height:14px;fill:currentColor}
-.icon-btn title{display:none}
+    .toolbar{
+      position:sticky;
+      top:0;
+      z-index:20;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      padding:8px 10px;
+      background:var(--toolbar);
+      border-bottom:1px solid var(--toolbar-line);
+      box-shadow:0 8px 24px rgba(0,0,0,.22);
+    }
+    .toolbar-title,
+    .toolbar-badge{display:none}
+    .icon-btn{
+      width:30px;
+      height:30px;
+      border-radius:8px;
+      border:1px solid var(--toolbar-line);
+      background:transparent;
+      color:#dce6fb;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      padding:0;
+      flex:0 0 30px;
+    }
+    .icon-btn:hover{background:#20335d}
+    .icon-btn svg{width:14px;height:14px;fill:currentColor}
 
-/* ── Page wrapper ── */
-.page-wrap{
-  padding:12px 10px 24px;
-  display:flex;justify-content:center;
-}
+    .page-wrap{
+      padding:18px 10px 28px;
+      display:flex;
+      justify-content:center;
+      overflow:auto;
+    }
+    .sheet{
+      width:210mm;
+      min-height:297mm;
+      background:var(--paper);
+      box-shadow:0 16px 48px rgba(19,28,46,.18);
+    }
+    .sheet-inner{
+      padding:7.5mm 7.5mm 9mm;
+    }
 
-/* ── A4 Sheet ── */
-.sheet{
-  width:210mm;
-  background:var(--paper);
-  box-shadow:0 10px 36px rgba(19,28,46,.18);
-}
-.sheet-inner{
-  padding:5mm 6mm 5mm;
-}
+    .top-title{
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+      border-bottom:2px solid var(--blue);
+      padding-bottom:7px;
+      margin-bottom:10px;
+    }
+    .logo-box{
+      width:54px;
+      flex:0 0 54px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding-top:1px;
+    }
+    .logo-box svg{display:block;width:48px;height:48px}
+    .header-right{flex:1;min-width:0}
+    .school-line-1,
+    .school-line-2,
+    .report-title{margin:0}
+    .school-line-1{
+      font-family:Georgia,'Times New Roman',serif;
+      font-weight:700;
+      font-size:14px;
+      color:var(--blue);
+      line-height:1.18;
+      text-transform:uppercase;
+      letter-spacing:.01em;
+    }
+    .school-line-2{
+      margin-top:1px;
+      color:var(--muted);
+      font-size:10px;
+      line-height:1.18;
+    }
+    .report-title-wrap{
+      margin-top:6px;
+      padding-top:5px;
+      border-top:1px solid var(--line);
+      text-align:left;
+      padding-left:2px;
+    }
+    .report-title{
+      font-family:Georgia,'Times New Roman',serif;
+      color:var(--blue);
+      font-size:12.5px;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.03em;
+      line-height:1.15;
+    }
+    .report-title .year{color:var(--gold)}
 
-/* ── Header ── */
-.top-title{
-  display:flex;align-items:flex-start;gap:9px;
-  border-bottom:1.5px solid var(--blue);
-  padding-bottom:5px;margin-bottom:7px;
-}
-.logo-box{
-  width:42px;flex:0 0 42px;
-  display:flex;align-items:center;justify-content:center;padding-top:1px;
-}
-.logo-box svg{display:block;width:38px;height:38px}
-.header-right{flex:1;min-width:0}
-.school-line-1,.school-line-2,.report-title{margin:0}
-.school-line-1{
-  font-family:Georgia,'Times New Roman',serif;
-  font-weight:700;font-size:11px;color:var(--blue);
-  line-height:1.15;text-transform:uppercase;letter-spacing:.01em;
-}
-.school-line-2{margin-top:1px;color:var(--muted);font-size:7.5px;line-height:1.1}
-.report-title-wrap{
-  margin-top:4px;padding-top:3px;
-  border-top:1px solid var(--line);padding-left:2px;
-}
-.report-title{
-  font-family:Georgia,'Times New Roman',serif;
-  color:var(--blue);font-size:9.5px;font-weight:700;
-  text-transform:uppercase;letter-spacing:.03em;line-height:1.1;
-}
-.report-title .year{color:var(--gold)}
+    .meta{
+      width:100%;
+      border-collapse:collapse;
+      margin-bottom:10px;
+    }
+    .meta td{
+      padding:2.5px 4px;
+      vertical-align:middle;
+    }
+    .meta .label{
+      width:118px;
+      color:#5e6c84;
+      font-size:9px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-weight:700;
+    }
+    .meta .sep{
+      width:10px;
+      text-align:center;
+      color:#8a95a7;
+      font-weight:700;
+    }
+    .meta .value{
+      border-bottom:1px solid var(--line-dark);
+      font-size:9.5px;
+      font-weight:500;
+      padding-top:2px;
+      padding-bottom:4px;
+    }
+    .meta strong{font-size:9.7px}
 
-/* ── Meta ── */
-.meta{width:100%;border-collapse:collapse;margin-bottom:7px}
-.meta td{padding:2px 3px;vertical-align:middle}
-.meta .label{
-  width:95px;color:#5e6c84;font-size:7.5px;
-  letter-spacing:.1em;text-transform:uppercase;font-weight:700;
-}
-.meta .sep{width:9px;text-align:center;color:#8a95a7;font-weight:700}
-.meta .value{
-  border-bottom:1px solid var(--line-dark);
-  font-size:7.8px;font-weight:700;padding-top:1px;padding-bottom:3px;
-}
-.meta strong{font-size:7.9px}
+    #namaSelect{
+      width:100%;
+      border:0;
+      outline:0;
+      background:transparent;
+      font:inherit;
+      font-weight:700;
+      color:var(--text);
+      padding:0;
+      appearance:none;
+      -webkit-appearance:none;
+      text-transform:uppercase;
+      letter-spacing:.01em;
+    }
+    .meta .value.uppercase,
+    #jawatanText{
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.01em;
+    }
 
-#namaSelect{
-  width:100%;border:0;outline:0;background:transparent;
-  font:inherit;font-weight:700;color:var(--text);padding:0;
-  appearance:none;-webkit-appearance:none;
-  text-transform:uppercase;letter-spacing:.01em;
-}
-.meta .value.uppercase,
-#jawatanText{font-weight:700;text-transform:uppercase;letter-spacing:.01em}
+    .months-caption{
+      text-align:center;
+      color:#66738a;
+      font-size:8.6px;
+      letter-spacing:.15em;
+      text-transform:uppercase;
+      font-weight:700;
+      margin-bottom:4px;
+    }
+    .months{
+      width:100%;
+      border-collapse:collapse;
+      margin-bottom:10px;
+      table-layout:fixed;
+      font-size:8.6px;
+      font-weight:700;
+      color:#5c697f;
+    }
+    .months td{
+      border:1px solid var(--line);
+      text-align:center;
+      padding:4px 4px;
+      background:#fff;
+      text-transform:uppercase;
+    }
+    .months td.active{
+      background:var(--blue);
+      color:#fff;
+      border-color:var(--blue);
+    }
 
-/* ── Months ── */
-.months-caption{
-  text-align:center;color:#66738a;font-size:6.5px;
-  letter-spacing:.15em;text-transform:uppercase;font-weight:700;margin-bottom:3px;
-}
-.months{
-  width:100%;border-collapse:collapse;margin-bottom:7px;
-  table-layout:fixed;font-size:6.8px;font-weight:700;color:#5c697f;
-}
-.months td{border:1px solid var(--line);text-align:center;padding:3.5px 3px;background:#fff}
-.months td.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+    .checklist,
+    .extra-table{
+      width:100%;
+      border-collapse:collapse;
+      table-layout:fixed;
+    }
+    .checklist th,
+    .checklist td,
+    .extra-table th,
+    .extra-table td{
+      border:1px solid var(--line);
+    }
+    .checklist thead th,
+    .extra-table thead th{
+      background:var(--blue);
+      color:#fff;
+      text-transform:uppercase;
+      font-size:8px;
+      letter-spacing:.04em;
+      font-weight:700;
+      text-align:center;
+      padding:3px 2px;
+      line-height:1.05;
+    }
+    .checklist tbody td{
+      background:#fff;
+      font-size:7.8px;
+      vertical-align:middle;
+      padding:2.5px 4px;
+    }
+    .checklist tbody tr:nth-child(even) td:not(.masa-cell){background:#f7f9fc}
 
-/* ── Checklist ── */
-.checklist,.extra-table{width:100%;border-collapse:collapse;table-layout:fixed}
-.checklist th,.checklist td,
-.extra-table th,.extra-table td{border:1px solid var(--line)}
-.checklist thead th,.extra-table thead th{
-  background:var(--blue);color:#fff;text-transform:uppercase;
-  font-size:6px;letter-spacing:.04em;font-weight:700;
-  text-align:center;padding:3px 2px;line-height:1.02;
-}
-.checklist tbody td{
-  background:#fff;font-size:6.3px;vertical-align:middle;padding:2px 3px;
-}
-.checklist tbody tr:nth-child(even) td:not(.masa-cell){background:#f7f9fc}
+    .col-bil{width:4.8%}
+    .col-masa{width:10%}
+    .col-tugas{width:46.5%}
+    .col-day{width:5%}
+    .col-note{width:14.7%}
 
-.col-bil{width:4.5%}
-.col-masa{width:9%}
-.col-tugas{width:48%}
-.col-day{width:4.6%}
-.col-note{width:14.1%}
+    .bil-cell{
+      text-align:center;
+      color:#56657d;
+      font-weight:700;
+      vertical-align:top!important;
+      padding-top:6px!important;
+    }
+    .masa-cell{
+      background:var(--masa)!important;
+      padding:0!important;
+      text-align:center;
+    }
+    .masa-box{
+      height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      color:var(--blue);
+      font-weight:700;
+      line-height:1.85;
+      font-size:7.9px;
+      letter-spacing:.01em;
+      min-height:100%;
+      padding:3px 2px;
+    }
+    .task-cell{
+      line-height:1.04;
+      padding-top:4px!important;
+      padding-bottom:4px!important;
+      font-size:14px;
+      font-weight:700;
+    }
+    .day-head{
+      color:#fff!important;
+    }
+    .day-head.day-i{background:#16a34a!important;border-color:#0f8a3d!important;}
+    .day-head.day-s{background:#f59e0b!important;border-color:#d48806!important;}
+    .day-head.day-r{background:#ef4444!important;border-color:#d93636!important;}
+    .day-head.day-k{background:#8b5cf6!important;border-color:#7447dd!important;}
+    .day-head.day-j{background:#06b6d4!important;border-color:#0891b2!important;}
+    .day-head .day-letter{
+      display:block;
+      font-size:11px;
+      font-weight:800;
+      margin-bottom:1px;
+    }
+    .day-head .day-date{
+      display:block;
+      font-size:5px;
+      line-height:1;
+      opacity:.96;
+      letter-spacing:0;
+    }
+    .day-cell{
+      padding:0!important;
+      text-align:center;
+      position:relative;
+      height:32px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .day-cell.checked{background:#f4fff7!important}
+    .day-cell.checked::after{
+      content:"✓";
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#18a34a;
+      font-size:14px;
+      line-height:1;
+      font-weight:800;
+      transform:rotate(-8deg);
+    }
+    .note-cell{padding:0!important}
+    .note-input,
+    .extra-input{
+      width:100%;
+      border:0;
+      outline:0;
+      background:transparent;
+      font:inherit;
+      color:inherit;
+      padding:4px 5px;
+    }
+    .note-input{
+      height:30px;
+      min-height:30px;
+      max-height:30px;
+      font-size:8.2px;
+      line-height:1.2;
+      font-weight:700;
+      resize:none;
+      overflow:auto;
+      display:block;
+      white-space:pre-wrap;
+      overflow-wrap:anywhere;
+      word-break:break-word;
+    }
+    .extra-input{font-size:10px;height:28px;font-weight:700}
 
-.bil-cell{
-  text-align:center;color:#56657d;font-weight:700;
-  vertical-align:top!important;padding-top:4px!important;
-}
-.masa-cell{background:var(--masa)!important;padding:0!important;text-align:center}
-.masa-box{
-  height:100%;display:flex;align-items:center;justify-content:center;
-  flex-direction:column;color:var(--blue);font-weight:700;
-  line-height:1.7;font-size:6.6px;letter-spacing:.01em;
-  min-height:100%;padding:3px 2px;
-}
-.task-cell{line-height:1.02;padding-top:3px!important;padding-bottom:3px!important;font-size:6.3px}
-.day-head{color:#fff!important}
-.day-head.day-i{background:#16a34a!important;border-color:#0f8a3d!important}
-.day-head.day-s{background:#f59e0b!important;border-color:#d48806!important}
-.day-head.day-r{background:#ef4444!important;border-color:#d93636!important}
-.day-head.day-k{background:#8b5cf6!important;border-color:#7447dd!important}
-.day-head.day-j{background:#06b6d4!important;border-color:#0891b2!important}
-.day-head .day-letter{display:block;font-size:9px;font-weight:800;margin-bottom:1px}
-.day-head .day-date{display:block;font-size:4px;line-height:1;opacity:.96;letter-spacing:0}
-.day-cell{
-  padding:0!important;text-align:center;position:relative;
-  height:26px;cursor:pointer;user-select:none;
-}
-.day-cell.checked{background:#f4fff7!important}
-.day-cell.checked::after{
-  content:"✓";position:absolute;inset:0;
-  display:flex;align-items:center;justify-content:center;
-  color:#18a34a;font-size:12px;line-height:1;font-weight:800;
-  transform:rotate(-8deg);
-}
-.note-cell{padding:0!important}
-.note-input,.extra-input{
-  width:100%;border:0;outline:0;background:transparent;
-  font:inherit;color:inherit;padding:3px 4px;
-}
-.note-input{
-  height:24px;min-height:24px;max-height:24px;
-  font-size:5.4px;line-height:1.1;font-weight:500;
-  resize:none;overflow:auto;display:block;
-  white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;
-}
-.extra-input{font-size:6.3px;height:22px}
+    .extra-table thead th{font-size:7.9px;font-weight:700}
+    .extra-table tbody td{
+      background:#fff;
+      font-size:9.6px;
+      padding:0;
+      height:28px;
+      font-weight:700;
+    }
+    .extra-table tbody td:first-child{
+      text-align:center;
+      font-weight:700;
+      color:#56657d;
+      padding:4px 0;
+      font-size:8.6px;
+    }
+    .extra-table tbody td:nth-child(2){width:13%}
 
-/* ── Extra table ── */
-.extra-table{margin-top:5px}
-.extra-table thead th{font-size:6.3px}
-.extra-table tbody td{background:#fff;font-size:6.3px;padding:0;height:22px}
-.extra-table tbody td:first-child{
-  text-align:center;font-weight:700;color:#56657d;padding:3px 0;font-size:7px;
-}
-.extra-table tbody td:nth-child(2){width:13%}
+    .footer{
+      margin-top:14px;
+      border-top:1px solid var(--line);
+      padding-top:10px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+    }
+    .sign-label{
+      color:#66738a;
+      font-size:8.8px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      font-weight:700;
+      margin-bottom:26px;
+    }
+    .sign-line{
+      border-top:1.4px solid var(--line-dark);
+      padding-top:6px;
+      min-height:18px;
+      color:var(--blue);
+      font-weight:700;
+      font-size:9.5px;
+      text-transform:uppercase;
+    }
 
-/* ── Footer ── */
-.footer{
-  margin-top:10px;border-top:1px solid var(--line);padding-top:8px;
-  display:grid;grid-template-columns:1fr 1fr;gap:14px;
-}
-.sign-label{
-  color:#66738a;font-size:7px;letter-spacing:.12em;
-  text-transform:uppercase;font-weight:700;margin-bottom:22px;
-}
-.sign-line{
-  border-top:1.2px solid var(--line-dark);padding-top:4px;
-  min-height:14px;color:var(--blue);font-weight:700;
-  font-size:7.5px;text-transform:uppercase;
-}
+    .toast{
+      position:fixed;
+      right:16px;
+      bottom:16px;
+      background:#102148;
+      color:#e8efff;
+      border:1px solid #2b4277;
+      border-radius:10px;
+      padding:10px 14px;
+      font-size:12.5px;
+      opacity:0;
+      transform:translateY(8px);
+      pointer-events:none;
+      transition:.2s ease;
+    }
+    .toast.show{opacity:1;transform:translateY(0)}
 
-/* ── Toast ── */
-.toast{
-  position:fixed;right:14px;bottom:14px;
-  background:#102148;color:#e8efff;
-  border:1px solid #2b4277;border-radius:8px;
-  padding:8px 12px;font-size:11px;
-  opacity:0;transform:translateY(6px);
-  pointer-events:none;transition:.2s ease;
-}
-.toast.show{opacity:1;transform:translateY(0)}
+    @media (max-width: 900px){
+      .page-wrap{padding:8px 4px 18px}
+      .sheet{flex:0 0 auto}
+      .sheet-inner{padding:14px}
+      .logo-box{width:44px;flex-basis:44px}
+      .logo-box svg{width:40px;height:40px}
+      .school-line-1{font-size:12px}
+      .school-line-2{font-size:9px}
+      .report-title{font-size:11px}
+      .meta .label{width:92px}
+    }
 
-/* ── Print ── */
-@media print{
-  body{background:#fff}
-  .toolbar,.toast{display:none!important}
-  .page-wrap{padding:0}
-  .sheet{box-shadow:none;width:210mm}
-  @page{size:A4 portrait;margin:0}
-}
-
-@media (max-width:800px){
-  .page-wrap{padding:8px 4px 18px}
-  .sheet{width:100%}
-  .sheet-inner{padding:10px}
-}
-```
-
+    @media print{
+      body{background:#fff}
+      .toolbar,.toast{display:none!important}
+      .page-wrap{padding:0}
+      .sheet{box-shadow:none;width:210mm;min-height:297mm}
+      @page{size:A4 portrait;margin:0}
+    }
   </style>
-  <!-- html2canvas for JPG export -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
 <body>
-
   <div class="toolbar">
-    <div class="toolbar-title">One Page Report</div>
-
-```
-<!-- PDF / Print -->
-<button class="icon-btn" title="Simpan PDF" onclick="window.print()">
-  <svg viewBox="0 0 24 24"><path d="M5 3h10l4 4v14H5V3Zm9 0v5h5M8 13h8M8 17h5"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M8 13h8M8 17h5"/><path d="M14 3v5h5" fill="none" stroke="currentColor" stroke-width="2"/><rect x="3" y="3" width="14" height="18" rx="1" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 9h5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-</button>
-
-<!-- JPG -->
-<button class="icon-btn" title="Simpan JPG" onclick="saveJpg()">
-  <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/><path d="M21 15l-5-5L5 21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-</button>
-
-<!-- Reset -->
-<button class="icon-btn" title="Reset tanda" onclick="clearChecks()">
-  <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7a5 5 0 1 1-4.9 6H5.1A7 7 0 1 0 12 5Z"/></svg>
-</button>
-```
-
+    <button class="icon-btn" title="Simpan PDF" aria-label="Simpan PDF" onclick="savePDF()">
+      <svg viewBox="0 0 24 24"><path d="M6 2h8l4 4v16H6V2Zm8 1.5V7h3.5L14 3.5ZM8 12h1.4c.87 0 1.5.57 1.5 1.4 0 .88-.63 1.45-1.5 1.45H9.2V17H8v-5Zm1.2 1v.86h.18c.28 0 .42-.14.42-.43s-.14-.43-.42-.43H9.2Zm2.53-1h1.82c1.43 0 2.45 1.01 2.45 2.5S14.98 17 13.55 17h-1.82v-5Zm1.2 1.05v2.9h.55c.74 0 1.3-.51 1.3-1.45 0-.92-.56-1.45-1.3-1.45h-.55ZM17.2 12H20v1h-1.6v1.05h1.4v1h-1.4V17h-1.2v-5Z"/></svg>
+    </button>
+    <button class="icon-btn" title="Simpan JPG" aria-label="Simpan JPG" onclick="saveJPG()">
+      <svg viewBox="0 0 24 24"><path d="M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Zm0 2v10h16V7H4Zm3 2.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm11 5.5H6l2.6-3.2 2.1 2.5 3.1-4.1L18 15Z"/></svg>
+    </button>
+    <button class="icon-btn" title="Reset borang" aria-label="Reset borang" onclick="resetCurrentForm()">
+      <svg viewBox="0 0 24 24"><path d="M12 5V2L7 7l5 5V9a5 5 0 1 1-5 5H5a7 7 0 1 0 7-9Z"/></svg>
+    </button>
   </div>
+  <input type="file" id="importFile" accept="application/json" hidden />
 
   <div class="page-wrap">
     <div class="sheet" id="sheet">
       <div class="sheet-inner">
+        <div class="top-title">
+          <div class="logo-box" aria-hidden="true">
+            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="32" cy="32" r="30" fill="#f3f6fb" stroke="#0c3f9a" stroke-width="2.5"/>
+              <path d="M20 18h16l8 8v20H20z" fill="#fff" stroke="#0c3f9a" stroke-width="2"/>
+              <path d="M36 18v10h10" fill="none" stroke="#0c3f9a" stroke-width="2"/>
+              <path d="M25 34l4 4 10-10" fill="none" stroke="#c62626" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M25 44h14" stroke="#0c3f9a" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="header-right">
+            <p class="school-line-1">Sekolah Menengah Kebangsaan Mentakab</p>
+            <p class="school-line-2">Jalan Pekeliling, 28400 Mentakab, Pahang Darul Makmur</p>
+            <div class="report-title-wrap">
+              <p class="report-title">Senarai Semak Tugasan Tahun <span class="year" id="tahun">2026</span></p>
+            </div>
+          </div>
+        </div>
 
-```
-    <!-- Header -->
-    <div class="top-title">
-      <div class="logo-box" aria-hidden="true">
-        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="32" cy="32" r="30" fill="#f3f6fb" stroke="#0c3f9a" stroke-width="2.5"/>
-          <path d="M20 18h16l8 8v20H20z" fill="#fff" stroke="#0c3f9a" stroke-width="2"/>
-          <path d="M36 18v10h10" fill="none" stroke="#0c3f9a" stroke-width="2"/>
-          <path d="M25 34l4 4 10-10" fill="none" stroke="#c62626" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M25 44h14" stroke="#0c3f9a" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <div class="header-right">
-        <p class="school-line-1">Sekolah Menengah Kebangsaan Mentakab</p>
-        <p class="school-line-2">Jalan Pekeliling, 28400 Mentakab, Pahang Darul Makmur</p>
-        <div class="report-title-wrap">
-          <p class="report-title">Senarai Semak Tugasan Tahun <span class="year" id="tahun">2026</span></p>
+        <table class="meta">
+          <tr>
+            <td class="label">Nama</td>
+            <td class="sep">:</td>
+            <td class="value">
+              <select id="namaSelect">
+                <option value="Afifah Binti Abdul Aziz" data-jawatan="Pembantu Makmal C2">Afifah Binti Abdul Aziz</option>
+                <option value="Ida Zarina Binti Idris" data-jawatan="Pembantu Makmal C2 (KUP)" selected>Ida Zarina Binti Idris</option>
+                <option value="Azian Binti Mohamad" data-jawatan="Pembantu Makmal C2 (KUP)">Azian Binti Mohamad</option>
+                <option value="Fatimah Binti Abdul Latiff" data-jawatan="Pembantu Makmal C2 (KUP)">Fatimah Binti Abdul Latiff</option>
+                <option value="Zainun Binti Mohamed Ramthan" data-jawatan="Pembantu Makmal C3 (KUP)">Zainun Binti Mohamed Ramthan</option>
+                <option value="Nor'aini Binti Me Yusoff" data-jawatan="Pembantu Makmal C2 (KUP)">Nor'aini Binti Me Yusoff</option>
+                <option value="Abdul Azam Bin Mohamed" data-jawatan="Pembantu Makmal C2 (KUP)">Abdul Azam Bin Mohamed</option>
+                <option value="Fakarullah Amer Bin Zainal Abidin" data-jawatan="Pembantu Makmal C1">Fakarullah Amer Bin Zainal Abidin</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td class="label">Jawatan</td>
+            <td class="sep">:</td>
+            <td class="value uppercase"><span id="jawatanText">Pembantu Makmal C2 (KUP)</span></td>
+          </tr>
+          <tr>
+            <td class="label">Waktu Bertugas</td>
+            <td class="sep">:</td>
+            <td class="value"><strong>7:30 pagi – 4:30 petang (Hari Persekolahan)</strong></td>
+          </tr>
+        </table>
+
+        <div class="months-caption">Bulan</div>
+        <table class="months">
+          <tr>
+            <td data-month="0">JAN</td>
+            <td data-month="1">FEB</td>
+            <td data-month="2">MAC</td>
+            <td data-month="3">APR</td>
+            <td data-month="4">MEI</td>
+            <td data-month="5">JUN</td>
+          </tr>
+          <tr>
+            <td data-month="6">JUL</td>
+            <td data-month="7">OGOS</td>
+            <td data-month="8">SEP</td>
+            <td data-month="9">OKT</td>
+            <td data-month="10">NOV</td>
+            <td data-month="11">DIS</td>
+          </tr>
+        </table>
+
+        <table class="checklist">
+          <colgroup>
+            <col class="col-bil">
+            <col class="col-masa">
+            <col class="col-tugas">
+            <col class="col-day">
+            <col class="col-day">
+            <col class="col-day">
+            <col class="col-day">
+            <col class="col-day">
+            <col class="col-note">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Bil.</th>
+              <th>Masa</th>
+              <th>Tugas Mingguan</th>
+              <th class="day-head day-i"><span class="day-letter">I</span><span class="day-date" id="date0"></span></th>
+              <th class="day-head day-s"><span class="day-letter">S</span><span class="day-date" id="date1"></span></th>
+              <th class="day-head day-r"><span class="day-letter">R</span><span class="day-date" id="date2"></span></th>
+              <th class="day-head day-k"><span class="day-letter">K</span><span class="day-date" id="date3"></span></th>
+              <th class="day-head day-j"><span class="day-letter">J</span><span class="day-date" id="date4"></span></th>
+              <th>Catatan</th>
+            </tr>
+          </thead>
+          <tbody id="taskBody"></tbody>
+        </table>
+
+        <table class="extra-table">
+          <thead>
+            <tr>
+              <th style="width:4.8%">Bil.</th>
+              <th style="width:13%">Tarikh</th>
+              <th>Tugas Tambahan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1.</td>
+              <td><input class="extra-input persist" data-key="extra_date_1" /></td>
+              <td><input class="extra-input persist" data-key="extra_task_1" /></td>
+            </tr>
+            <tr>
+              <td>2.</td>
+              <td><input class="extra-input persist" data-key="extra_date_2" /></td>
+              <td><input class="extra-input persist" data-key="extra_task_2" /></td>
+            </tr>
+            <tr>
+              <td>3.</td>
+              <td><input class="extra-input persist" data-key="extra_date_3" /></td>
+              <td><input class="extra-input persist" data-key="extra_task_3" /></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="footer">
+          <div>
+            <div class="sign-label">Disediakan Oleh :</div>
+            <div class="sign-line" id="footerName">IDA ZARINA BINTI IDRIS</div>
+          </div>
+          <div>
+            <div class="sign-label">Disahkan / Disemak :</div>
+            <div class="sign-line"></div>
+          </div>
         </div>
       </div>
     </div>
-
-    <!-- Meta -->
-    <table class="meta">
-      <tr>
-        <td class="label">Nama</td>
-        <td class="sep">:</td>
-        <td class="value">
-          <select id="namaSelect">
-            <option value="Afifah Binti Abdul Aziz" data-jawatan="Pembantu Makmal C2">Afifah Binti Abdul Aziz</option>
-            <option value="Ida Zarina Binti Idris" data-jawatan="Pembantu Makmal C2 (KUP)" selected>Ida Zarina Binti Idris</option>
-            <option value="Azian Binti Mohamad" data-jawatan="Pembantu Makmal C2 (KUP)">Azian Binti Mohamad</option>
-            <option value="Fatimah Binti Abdul Latiff" data-jawatan="Pembantu Makmal C2 (KUP)">Fatimah Binti Abdul Latiff</option>
-            <option value="Zainun Binti Mohamed Ramthan" data-jawatan="Pembantu Makmal C3 (KUP)">Zainun Binti Mohamed Ramthan</option>
-            <option value="Nor'aini Binti Me Yusoff" data-jawatan="Pembantu Makmal C2 (KUP)">Nor'aini Binti Me Yusoff</option>
-            <option value="Abdul Azam Bin Mohamed" data-jawatan="Pembantu Makmal C2 (KUP)">Abdul Azam Bin Mohamed</option>
-            <option value="Fakarullah Amer Bin Zainal Abidin" data-jawatan="Pembantu Makmal C1">Fakarullah Amer Bin Zainal Abidin</option>
-          </select>
-        </td>
-      </tr>
-      <tr>
-        <td class="label">Jawatan</td>
-        <td class="sep">:</td>
-        <td class="value uppercase"><span id="jawatanText">Pembantu Makmal C2 (KUP)</span></td>
-      </tr>
-      <tr>
-        <td class="label">Waktu Bertugas</td>
-        <td class="sep">:</td>
-        <td class="value"><strong>7:30 pagi – 4:30 petang (Hari Persekolahan)</strong></td>
-      </tr>
-    </table>
-
-    <!-- Months -->
-    <div class="months-caption">Bulan</div>
-    <table class="months">
-      <tr>
-        <td data-month="0">Jan</td><td data-month="1">Feb</td>
-        <td data-month="2">Mac</td><td data-month="3">Apr</td>
-        <td data-month="4">Mei</td><td data-month="5">Jun</td>
-      </tr>
-      <tr>
-        <td data-month="6">Jul</td><td data-month="7">Ogos</td>
-        <td data-month="8">Sep</td><td data-month="9">Okt</td>
-        <td data-month="10">Nov</td><td data-month="11">Dis</td>
-      </tr>
-    </table>
-
-    <!-- Checklist -->
-    <table class="checklist">
-      <colgroup>
-        <col class="col-bil"><col class="col-masa"><col class="col-tugas">
-        <col class="col-day"><col class="col-day"><col class="col-day">
-        <col class="col-day"><col class="col-day"><col class="col-note">
-      </colgroup>
-      <thead>
-        <tr>
-          <th>Bil.</th><th>Masa</th><th>Tugas Mingguan</th>
-          <th class="day-head day-i"><span class="day-letter">I</span><span class="day-date" id="date0"></span></th>
-          <th class="day-head day-s"><span class="day-letter">S</span><span class="day-date" id="date1"></span></th>
-          <th class="day-head day-r"><span class="day-letter">R</span><span class="day-date" id="date2"></span></th>
-          <th class="day-head day-k"><span class="day-letter">K</span><span class="day-date" id="date3"></span></th>
-          <th class="day-head day-j"><span class="day-letter">J</span><span class="day-date" id="date4"></span></th>
-          <th>Catatan</th>
-        </tr>
-      </thead>
-      <tbody id="taskBody"></tbody>
-    </table>
-
-    <!-- Extra tasks -->
-    <table class="extra-table">
-      <thead>
-        <tr>
-          <th style="width:4.5%">Bil.</th>
-          <th style="width:13%">Tarikh</th>
-          <th>Tugas Tambahan</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1.</td>
-          <td><input class="extra-input persist" data-key="extra_date_1"/></td>
-          <td><input class="extra-input persist" data-key="extra_task_1"/></td>
-        </tr>
-        <tr>
-          <td>2.</td>
-          <td><input class="extra-input persist" data-key="extra_date_2"/></td>
-          <td><input class="extra-input persist" data-key="extra_task_2"/></td>
-        </tr>
-        <tr>
-          <td>3.</td>
-          <td><input class="extra-input persist" data-key="extra_date_3"/></td>
-          <td><input class="extra-input persist" data-key="extra_task_3"/></td>
-        </tr>
-      </tbody>
-    </table>
-
-    <!-- Footer -->
-    <div class="footer">
-      <div>
-        <div class="sign-label">Disediakan Oleh :</div>
-        <div class="sign-line" id="footerName">IDA ZARINA BINTI IDRIS</div>
-      </div>
-      <div>
-        <div class="sign-label">Disahkan / Disemak :</div>
-        <div class="sign-line"></div>
-      </div>
-    </div>
-
-  </div><!-- /sheet-inner -->
-</div><!-- /sheet -->
-```
-
   </div>
 
   <div class="toast" id="toast">Disimpan</div>
@@ -446,6 +628,7 @@
     const taskBody = document.getElementById('taskBody');
     const toast = document.getElementById('toast');
     const yearEl = document.getElementById('tahun');
+    const importFile = document.getElementById('importFile');
     const now = new Date();
     let appStore = loadStore();
     let state = null;
@@ -467,10 +650,14 @@
       });
     });
 
-    function defaultStaffState(){ return { checks:{}, persist:{} }; }
+    importFile.addEventListener('change', importCurrentStaff);
+
+    function defaultStaffState(){
+      return { checks:{}, persist:{} };
+    }
 
     function staffKey(name){
-      return String(name||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'')||'staff';
+      return String(name || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'') || 'staff';
     }
 
     function loadStore(){
@@ -507,10 +694,10 @@
 
         const tdBil = document.createElement('td');
         tdBil.className = 'bil-cell';
-        tdBil.textContent = `${index+1}.`;
+        tdBil.textContent = `${index + 1}.`;
         tr.appendChild(tdBil);
 
-        if(index===0){
+        if(index === 0){
           const tdMasa = document.createElement('td');
           tdMasa.className = 'masa-cell';
           tdMasa.rowSpan = TASKS.length;
@@ -523,7 +710,7 @@
         tdTask.textContent = task;
         tr.appendChild(tdTask);
 
-        for(let d=0; d<5; d++){
+        for(let d = 0; d < 5; d++){
           const td = document.createElement('td');
           td.className = 'day-cell';
           const key = `check_${index}_${d}`;
@@ -538,118 +725,311 @@
 
         const tdNote = document.createElement('td');
         tdNote.className = 'note-cell';
-        tdNote.innerHTML = `<textarea class="note-input" rows="2" maxlength="120" data-key="note_${index}">${escapeHtml(state.persist[`note_${index}`]||'')}</textarea>`;
+        tdNote.innerHTML = `<textarea class="note-input" rows="2" maxlength="120" data-key="note_${index}">${escapeHtml(state.persist[`note_${index}`] || '')}</textarea>`;
+        tr.appendChild(tdNote);
+        fragment.appendChild(tr);
+      });
 
-```
-    tr.appendChild(tdNote);
-    fragment.appendChild(tr);
-  });
+      taskBody.innerHTML = '';
+      taskBody.appendChild(fragment);
 
-  taskBody.innerHTML = '';
-  taskBody.appendChild(fragment);
+      taskBody.querySelectorAll('.note-input').forEach(input => {
+        input.addEventListener('input', () => {
+          state.persist[input.dataset.key] = input.value;
+          saveStore();
+        });
+      });
+    }
 
-  taskBody.querySelectorAll('.note-input').forEach(input => {
-    input.addEventListener('input', () => {
-      state.persist[input.dataset.key] = input.value;
+    function hydratePersistInputs(){
+      document.querySelectorAll('.persist').forEach(input => {
+        input.value = state.persist[input.dataset.key] || '';
+      });
+    }
+
+    function exportCurrentStaff(){
+      const payload = {
+        nama: namaSelect.value,
+        jawatan: jawatanText.textContent,
+        savedAt: new Date().toISOString(),
+        data: state
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `backup-${staffKey(namaSelect.value)}.json`;
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+      showToast('Backup staff berjaya dimuat turun');
+    }
+
+    function importCurrentStaff(event){
+      const file = event.target.files && event.target.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try{
+          const parsed = JSON.parse(reader.result);
+          if(!parsed || !parsed.data) throw new Error('Format tidak sah');
+          state = {
+            checks: parsed.data.checks || {},
+            persist: parsed.data.persist || {}
+          };
+          appStore.staffData[staffKey(namaSelect.value)] = state;
+          buildTasks();
+          hydratePersistInputs();
+          saveStore(false);
+          showToast('Backup staff berjaya dipulihkan');
+        }catch(e){
+          showToast('Fail backup tidak sah');
+        }
+        event.target.value = '';
+      };
+      reader.readAsText(file);
+    }
+
+
+    function fillWeekDates(date){
+      const monday = getMonday(date);
+      for(let i = 0; i < 5; i++){
+        const d = new Date(monday);
+        d.setDate(monday.getDate() + i);
+        document.getElementById(`date${i}`).textContent = formatDayDate(d);
+      }
+    }
+
+    function getMonday(date){
+      const d = new Date(date);
+      const day = d.getDay();
+      const diff = day === 0 ? -6 : 1 - day;
+      d.setDate(d.getDate() + diff);
+      d.setHours(0,0,0,0);
+      return d;
+    }
+
+    function formatDayDate(d){
+      const dd = String(d.getDate()).padStart(2, '0');
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      return `${dd}/${mm}`;
+    }
+
+    function markCurrentMonth(monthIndex){
+      document.querySelectorAll('[data-month]').forEach(cell => {
+        cell.classList.toggle('active', Number(cell.dataset.month) === monthIndex);
+      });
+    }
+
+    function applySelectedName(name){
+      const option = Array.from(namaSelect.options).find(opt => opt.value === name) || namaSelect.options[0];
+      namaSelect.value = option.value;
+      jawatanText.textContent = option.dataset.jawatan || '-';
+      footerName.textContent = option.value.toUpperCase();
+    }
+
+    function showToast(message){
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(showToast.t);
+      showToast.t = setTimeout(() => toast.classList.remove('show'), 1100);
+    }
+
+    function markAll(){
+      document.querySelectorAll('.day-cell').forEach(cell => cell.classList.add('checked'));
+      state.checks = {};
+      TASKS.forEach((_, i) => {
+        for(let d = 0; d < 5; d++) state.checks[`check_${i}_${d}`] = true;
+      });
       saveStore();
-    });
-  });
-}
+    }
 
-function hydratePersistInputs(){
-  document.querySelectorAll('.persist').forEach(input => {
-    input.value = state.persist[input.dataset.key] || '';
-  });
-}
+    function clearChecks(){
+      document.querySelectorAll('.day-cell').forEach(cell => cell.classList.remove('checked'));
+      state.checks = {};
+      saveStore();
+    }
 
-function applySelectedName(name){
-  const option = Array.from(namaSelect.options).find(opt=>opt.value===name) || namaSelect.options[0];
-  namaSelect.value = option.value;
-  jawatanText.textContent = option.dataset.jawatan || '-';
-  footerName.textContent = option.value.toUpperCase();
-}
+    function savePDF(){
+      const previousTitle = document.title;
+      document.title = `senarai-semak-${staffKey(namaSelect.value)}`;
+      window.print();
+      setTimeout(() => { document.title = previousTitle; }, 300);
+    }
 
-function clearChecks(){
-  document.querySelectorAll('.day-cell').forEach(cell=>cell.classList.remove('checked'));
-  state.checks = {};
-  saveStore();
-}
+    function resetCurrentForm(){
+      state = defaultStaffState();
+      appStore.staffData[staffKey(namaSelect.value)] = state;
+      buildTasks();
+      hydratePersistInputs();
+      saveStore(false);
+      showToast('Borang semasa telah direset');
+    }
 
-function showToast(message){
-  toast.textContent = message;
-  toast.classList.add('show');
-  clearTimeout(showToast.t);
-  showToast.t = setTimeout(()=>toast.classList.remove('show'), 1100);
-}
+    async function saveJPG(){
+      try{
+        const filename = `senarai-semak-${staffKey(namaSelect.value)}.jpg`;
+        const canvas = await renderSheetToCanvas();
+        await downloadCanvasAsJPG(canvas, filename);
+        if(isIOSLike()){
+          showToast('JPG telah dibuka. Tekan lama pada imej untuk simpan.');
+        }else{
+          showToast('JPG berjaya disimpan');
+        }
+      }catch(error){
+        console.error(error);
+        showToast('JPG tidak berjaya dijana');
+      }
+    }
 
-function fillWeekDates(date){
-  const monday = getMonday(date);
-  for(let i=0; i<5; i++){
-    const d = new Date(monday);
-    d.setDate(monday.getDate()+i);
-    document.getElementById(`date${i}`).textContent = formatDayDate(d);
-  }
-}
+    async function renderSheetToCanvas(){
+      const clone = createExportClone();
+      clone.style.margin = '0';
+      clone.style.boxShadow = 'none';
+      clone.style.background = '#ffffff';
+      clone.style.position = 'fixed';
+      clone.style.left = '-99999px';
+      clone.style.top = '0';
+      clone.style.zIndex = '-1';
+      document.body.appendChild(clone);
 
-function getMonday(date){
-  const d = new Date(date);
-  const day = d.getDay();
-  const diff = day===0 ? -6 : 1-day;
-  d.setDate(d.getDate()+diff);
-  d.setHours(0,0,0,0);
-  return d;
-}
+      try{
+        if(window.html2canvas){
+          return await window.html2canvas(clone, {
+            backgroundColor:'#ffffff',
+            scale:2,
+            useCORS:true,
+            allowTaint:true,
+            logging:false
+          });
+        }
+        return await renderSheetToCanvasFallback(clone);
+      } finally {
+        clone.remove();
+      }
+    }
 
-function formatDayDate(d){
-  const dd = String(d.getDate()).padStart(2,'0');
-  const mm = String(d.getMonth()+1).padStart(2,'0');
-  return `${dd}/${mm}`;
-}
+    async function renderSheetToCanvasFallback(clone){
+      const width = Math.ceil(clone.getBoundingClientRect().width || 794);
+      const height = Math.ceil(clone.getBoundingClientRect().height || 1123);
+      const styles = Array.from(document.querySelectorAll('style')).map(style => style.textContent).join('\n') + '\n.export-static{white-space:pre-wrap;} .sheet{box-shadow:none !important;}';
+      const cloneMarkup = clone.outerHTML.replace(/<br>/g, '<br/>');
+      const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+          <foreignObject width="100%" height="100%">
+            <div xmlns="http://www.w3.org/1999/xhtml" style="width:${width}px;height:${height}px;background:#ffffff;">
+              <style>${escapeXml(styles)}</style>${cloneMarkup}
+            </div>
+          </foreignObject>
+        </svg>`;
 
-function markCurrentMonth(monthIndex){
-  document.querySelectorAll('[data-month]').forEach(cell=>{
-    cell.classList.toggle('active', Number(cell.dataset.month)===monthIndex);
-  });
-}
+      const svgBlob = new Blob([svg], { type:'image/svg+xml;charset=utf-8' });
+      const svgUrl = URL.createObjectURL(svgBlob);
 
-function escapeHtml(str){
-  return str.replace(/[&<>"]/g, ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
-}
+      try{
+        const img = await loadImage(svgUrl);
+        const canvas = document.createElement('canvas');
+        const scale = 2;
+        canvas.width = Math.round(width * scale);
+        canvas.height = Math.round(height * scale);
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.scale(scale, scale);
+        ctx.drawImage(img, 0, 0);
+        return canvas;
+      } finally {
+        URL.revokeObjectURL(svgUrl);
+      }
+    }
 
-/* ── Save JPG ── */
-async function saveJpg(){
-  showToast('Menjana imej…');
-  const sheet = document.getElementById('sheet');
-  // Hide interactive controls briefly
-  const selects = sheet.querySelectorAll('select');
-  const selectTexts = [];
-  selects.forEach((s,i)=>{ selectTexts[i]=s.value; });
+    function createExportClone(){
+      const clone = document.getElementById('sheet').cloneNode(true);
+      clone.querySelectorAll('textarea').forEach(textarea => {
+        const box = document.createElement('div');
+        box.className = textarea.className + ' export-static';
+        box.style.minHeight = `${textarea.offsetHeight || 36}px`;
+        box.textContent = textarea.value || '';
+        textarea.replaceWith(box);
+      });
+      clone.querySelectorAll('input').forEach(input => {
+        const box = document.createElement('div');
+        box.className = input.className + ' export-static';
+        box.style.minHeight = `${input.offsetHeight || 24}px`;
+        box.textContent = input.value || '';
+        input.replaceWith(box);
+      });
+      clone.querySelectorAll('select').forEach(select => {
+        const box = document.createElement('div');
+        box.className = 'export-static';
+        box.style.font = getComputedStyle(select).font;
+        box.style.fontWeight = getComputedStyle(select).fontWeight;
+        box.style.textTransform = getComputedStyle(select).textTransform;
+        box.style.letterSpacing = getComputedStyle(select).letterSpacing;
+        box.textContent = select.value || '';
+        select.replaceWith(box);
+      });
+      return clone;
+    }
 
-  try{
-    const canvas = await html2canvas(sheet, {
-      scale: 2,
-      useCORS: true,
-      backgroundColor:'#ffffff',
-      logging: false
-    });
-    const link = document.createElement('a');
-    const staffSlug = staffKey(namaSelect.value);
-    link.download = `report-${staffSlug}.jpg`;
-    link.href = canvas.toDataURL('image/jpeg', 0.92);
-    link.click();
-    showToast('JPG berjaya disimpan');
-  }catch(e){
-    showToast('Ralat menjana imej');
-    console.error(e);
-  }
-}
+    function loadImage(src){
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => reject(new Error('Imej eksport gagal dimuatkan'));
+        img.src = src;
+      });
+    }
 
-function staffKey(name){
-  return String(name||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'')||'staff';
-}
-```
+    async function downloadCanvasAsJPG(canvas, filename){
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
 
+      if(isIOSLike()){
+        const win = window.open('', '_blank');
+        if(!win) throw new Error('Tetingkap simpanan dihalang oleh pelayar');
+        win.document.write(`<!DOCTYPE html><html lang="ms"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>${escapeHtml(filename)}</title><style>html,body{margin:0;padding:0;background:#111}img{display:block;max-width:100%;height:auto;margin:0 auto;background:#fff}</style></head><body><img src="${dataUrl}" alt="${escapeHtml(filename)}"></body></html>`);
+        win.document.close();
+        return;
+      }
+
+      if(canvas.toBlob){
+        const blob = await new Promise((resolve, reject) => canvas.toBlob(b => b ? resolve(b) : reject(new Error('Canvas gagal dijana')), 'image/jpeg', 0.95));
+        const url = URL.createObjectURL(blob);
+        triggerDownload(url, filename);
+        setTimeout(() => URL.revokeObjectURL(url), 1500);
+        return;
+      }
+
+      triggerDownload(dataUrl, filename);
+    }
+
+    function triggerDownload(url, filename){
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }
+
+    function isIOSLike(){
+      const ua = navigator.userAgent || '';
+      return /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    }
+
+    function escapeHtml(str){
+      return str.replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+    }
+
+    function escapeXml(str){
+      return String(str).replace(/[<>&'"]/g, ch => ({'<':'&lt;','>':'&gt;','&':'&amp;',"'":'&apos;','"':'&quot;'}[ch]));
+    }
   </script>
 
+  <script>
+    if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+  </script>
 </body>
 </html>
