@@ -257,11 +257,11 @@
     }
     .checklist tbody tr:nth-child(even) td:not(.masa-cell){background:#f7f9fc}
 
-    .col-bil{width:4.5%}
-.col-masa{width:10%}
-.col-tugas{width:44%}
-.col-day{width:5.6%}
-.col-note{width:13.5%}
+    .col-bil{width:4.8%}
+    .col-masa{width:10%}
+    .col-tugas{width:46.5%}
+    .col-day{width:5%}
+    .col-note{width:14.7%}
 
     .bil-cell{
       text-align:center;
@@ -319,29 +319,26 @@
       opacity:.96;
       letter-spacing:0;
     }
-    ..day-cell{
+    .day-cell{
   padding:0!important;
+  text-align:center;
   position:relative;
   height:32px;
   cursor:pointer;
   user-select:none;
   background:#fff;
-  display:grid;
-  place-items:center;
-  overflow:hidden;
 }
 
 .day-cell::before{
   content:"";
-  width:72%;
-  height:72%;
-  max-width:22px;
-  max-height:22px;
-  min-width:18px;
-  min-height:18px;
-  box-sizing:border-box;
-  border:1.6px solid #9bb4db;
-  border-radius:5px;
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:16px;
+  height:16px;
+  transform:translate(-50%,-50%);
+  border:1.6px solid #8aa7d6;
+  border-radius:4px;
   background:linear-gradient(180deg,#ffffff 0%,#eef4ff 100%);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.95),
@@ -349,13 +346,20 @@
   transition:.18s ease;
 }
 
+.day-cell:hover::before{
+  border-color:#4d7fe0;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.95),
+    0 2px 5px rgba(12,63,154,.18);
+}
+
+.day-cell.checked{
+  background:#f4fff7!important;
+}
+
 .day-cell.checked::before{
-  width:72%;
-  height:72%;
-  max-width:22px;
-  max-height:22px;
-  min-width:18px;
-  min-height:18px;
+  width:17px;
+  height:17px;
   border-color:#159447;
   background:linear-gradient(180deg,#22c55e 0%,#169c46 100%);
   box-shadow:
@@ -366,19 +370,14 @@
 .day-cell.checked::after{
   content:"✓";
   position:absolute;
-  inset:0;
-  display:grid;
-  place-items:center;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-56%);
   color:#fff;
-  font-size:14px;
+  font-size:11px;
   line-height:1;
   font-weight:900;
-  transform:translateY(-1px);
-}
-  .day-cell.checked::after{
-    font-size:8px;
-    transform:translateY(0);
-  }
+  z-index:1;
 }
     .note-cell{padding:0!important}
     .note-input,
@@ -506,20 +505,9 @@
       .day-head .day-letter{font-size:9px}
       .day-head .day-date{font-size:6.66px}
       .day-cell{height:28px}
-
-.day-cell::before,
-.day-cell.checked::before{
-  width:70%;
-  height:70%;
-  min-width:16px;
-  min-height:16px;
-  max-width:20px;
-  max-height:20px;
-}
-
-.day-cell.checked::after{
-  font-size:12px;
-}
+.day-cell::before{width:14px;height:14px}
+.day-cell.checked::before{width:15px;height:15px}
+.day-cell.checked::after{font-size:10px}
       .note-input{height:28px;min-height:28px;max-height:28px;font-size:7.8px;padding:3px 4px}
       .extra-input{font-size:8.8px;height:26px;padding:3px 4px}
       .extra-table tbody td{font-size:8.6px;height:26px}
@@ -561,21 +549,9 @@
       .day-head .day-letter{font-size:8px;margin-bottom:0}
       .day-head .day-date{font-size:6px}
       .day-cell{height:24px}
-
-.day-cell::before,
-.day-cell.checked::before{
-  width:68%;
-  height:68%;
-  min-width:14px;
-  min-height:14px;
-  max-width:17px;
-  max-height:17px;
-  border-radius:4px;
-}
-
-.day-cell.checked::after{
-  font-size:10px;
-}
+.day-cell::before{width:12px;height:12px;border-radius:3px}
+.day-cell.checked::before{width:13px;height:13px}
+.day-cell.checked::after{font-size:9px}
       .note-input{height:24px;min-height:24px;max-height:24px;font-size:6.7px;line-height:1.12;padding:2px 3px}
       .extra-input{font-size:7.2px;height:22px;padding:2px 3px}
       .extra-table tbody td{font-size:7.1px;height:22px}
