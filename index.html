@@ -1277,11 +1277,56 @@
     function createExportClone(){
       const liveSheet = document.getElementById('sheet');
       const clone = liveSheet.cloneNode(true);
+      const liveSheetRect = liveSheet.getBoundingClientRect();
+      if(liveSheetRect.width) clone.style.width = `${Math.round(liveSheetRect.width)}px`;
+      if(liveSheetRect.height) clone.style.minHeight = `${Math.round(liveSheetRect.height)}px`;
 
       const liveDayCells = Array.from(liveSheet.querySelectorAll('.day-cell'));
       const cloneDayCells = Array.from(clone.querySelectorAll('.day-cell'));
       cloneDayCells.forEach((cell, index) => {
-        cell.classList.toggle('checked', liveDayCells[index] && liveDayCells[index].classList.contains('checked'));
+        const liveCell = liveDayCells[index];
+        const checked = !!(liveCell && liveCell.classList.contains('checked'));
+        cell.classList.toggle('checked', checked);
+        cell.innerHTML = '';
+        cell.style.padding = '0';
+        cell.style.position = 'relative';
+        cell.style.textAlign = 'center';
+        cell.style.verticalAlign = 'middle';
+        cell.style.background = checked ? '#f4fff7' : '#ffffff';
+
+        const liveRect = liveCell ? liveCell.getBoundingClientRect() : null;
+        if(liveRect && liveRect.height) cell.style.height = `${Math.round(liveRect.height)}px`;
+
+        const boxSize = Math.max(12, Math.min(17, Math.round(((liveRect && liveRect.height) || cell.offsetHeight || 32) * 0.5)));
+        const wrap = document.createElement('div');
+        wrap.style.width = '100%';
+        wrap.style.height = '100%';
+        wrap.style.minHeight = `${Math.round((liveRect && liveRect.height) || cell.offsetHeight || 32)}px`;
+        wrap.style.display = 'flex';
+        wrap.style.alignItems = 'center';
+        wrap.style.justifyContent = 'center';
+
+        const box = document.createElement('div');
+        box.className = 'export-check-box';
+        box.style.width = `${boxSize}px`;
+        box.style.height = `${boxSize}px`;
+        box.style.display = 'flex';
+        box.style.alignItems = 'center';
+        box.style.justifyContent = 'center';
+        box.style.boxSizing = 'border-box';
+        box.style.borderRadius = boxSize <= 13 ? '3px' : '4px';
+        box.style.lineHeight = '1';
+        box.style.fontWeight = '900';
+        box.style.fontSize = `${Math.max(9, boxSize - 5)}px`;
+        box.style.border = checked ? '1.6px solid #159447' : '1.6px solid #8aa7d6';
+        box.style.background = checked ? 'linear-gradient(180deg,#22c55e 0%,#169c46 100%)' : 'linear-gradient(180deg,#ffffff 0%,#eef4ff 100%)';
+        box.style.boxShadow = checked
+          ? 'inset 0 1px 0 rgba(255,255,255,.28), 0 2px 5px rgba(23,112,59,.22)'
+          : 'inset 0 1px 0 rgba(255,255,255,.95), 0 1px 2px rgba(12,63,154,.12)';
+        box.style.color = '#ffffff';
+        box.textContent = checked ? '✓' : '';
+        wrap.appendChild(box);
+        cell.appendChild(wrap);
       });
 
       const liveTextareas = Array.from(liveSheet.querySelectorAll('textarea'));
